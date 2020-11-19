@@ -1,9 +1,8 @@
-package ru.Shniros.DAL.DAO.Impl;
+package ru.Shniros.DAO.Impl;
 
-import com.sun.rowset.internal.InsertRow;
-import ru.Shniros.DAL.DAO.iPersonDAO;
-import ru.Shniros.jdbc.SingleConnectionManager;
-import ru.Shniros.DAL.Person;
+import ru.Shniros.DAO.iPersonDAO;
+import ru.Shniros.DAO.jdbc.SingleConnectionManager;
+import ru.Shniros.DAO.domain.Person;
 
 import java.sql.*;
 

@@ -1,12 +1,6 @@
-package ru.Shniros.DAL;
+package ru.Shniros.DAO.domain;
 
 import org.springframework.util.DigestUtils;
-import ru.Shniros.jdbc.SingleConnectionManager;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Person {
     private String firstName;

@@ -1,8 +1,8 @@
 package ru.Shniros.service.impl;
 
 import org.springframework.util.DigestUtils;
-import ru.Shniros.DAL.DAO.Impl.PersonDAO;
-import ru.Shniros.DAL.Person;
+import ru.Shniros.DAO.Impl.PersonDAO;
+import ru.Shniros.DAO.domain.Person;
 import ru.Shniros.service.iPersonService;
 
 public class PersonServiceImpl implements iPersonService {

@@ -1,4 +1,4 @@
-package ru.Shniros.jdbc;
+package ru.Shniros.DAO.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

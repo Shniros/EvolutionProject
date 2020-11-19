@@ -1,6 +1,6 @@
-package ru.Shniros.DAL.DAO;
+package ru.Shniros.DAO;
 
-import ru.Shniros.DAL.Person;
+import ru.Shniros.DAO.domain.Person;
 
 public interface iPersonDAO {
     boolean addNewPerson(Person person);

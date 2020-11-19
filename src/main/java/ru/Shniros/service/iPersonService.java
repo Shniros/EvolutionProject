@@ -1,6 +1,6 @@
 package ru.Shniros.service;
 
-import ru.Shniros.DAL.Person;
+import ru.Shniros.DAO.domain.Person;
 
 public interface iPersonService {
     Person login(String email, String password) ;

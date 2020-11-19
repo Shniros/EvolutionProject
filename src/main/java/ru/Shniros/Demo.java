@@ -1,6 +1,6 @@
 package ru.Shniros;
 
-import ru.Shniros.DAL.Person;
+import ru.Shniros.DAO.domain.Person;
 import ru.Shniros.service.impl.PersonServiceImpl;
 
 import java.util.Scanner;
