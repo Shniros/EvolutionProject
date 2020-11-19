@@ -11,7 +11,7 @@ public class PersonDAO implements iPersonDAO {
     private static Connection connection;
 
     @Override
-    public boolean addNewPerson(Person person){
+    public boolean addPerson(Person person){
 
         try{
             connection = SingleConnectionManager.getConnection();
@@ -23,7 +23,7 @@ public class PersonDAO implements iPersonDAO {
                     "password, " +
                     "age, " +
                     "balance)" +
-                    " VALUES(?, ?, ?, ?, ?, ?, ?)";
+                    " VALUES(?, ?, ?, ?, ?)";
 
             PreparedStatement ps = connection.prepareStatement(insertSQL);
             ps.setInt(1, person.getId());
@@ -31,8 +31,6 @@ public class PersonDAO implements iPersonDAO {
             ps.setString(3, person.getLastName());
             ps.setString(4, person.getEmail());
             ps.setString(5, person.getPassword());
-            ps.setInt(6, person.getAge());
-            ps.setInt(7,person.getBalance());
             ps.executeUpdate();
             connection.close();
             return true;
@@ -58,8 +56,6 @@ public class PersonDAO implements iPersonDAO {
                 findPerson.setLastName(rs.getString("last_name"));
                 findPerson.setEmail(rs.getString("email"));
                 findPerson.setPassword(rs.getString("password"));
-                findPerson.setAge(rs.getInt("age"));
-                findPerson.setBalance(rs.getInt("balance"));
                 return findPerson;
             }
         } catch (SQLException throwables) {

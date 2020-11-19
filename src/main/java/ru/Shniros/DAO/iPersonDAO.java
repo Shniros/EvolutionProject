@@ -2,7 +2,7 @@ package ru.Shniros.DAO;
 
 import ru.Shniros.DAO.domain.Person;
 
-public interface iPersonDAO {
-    boolean addNewPerson(Person person);
-    Person findByEmail(String email);
+public interface iPersonDAO <DOMAIN, EMAIL>{
+    boolean insertPerson(DOMAIN domain);
+    DOMAIN findByEmail(EMAIL email);
 }
