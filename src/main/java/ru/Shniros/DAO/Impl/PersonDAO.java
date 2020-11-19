@@ -6,12 +6,12 @@ import ru.Shniros.DAO.domain.Person;
 
 import java.sql.*;
 
-public class PersonDAO implements iPersonDAO {
+public class PersonDAO implements iPersonDAO<Person, String> {
     private String TABLE_NAME = "finance.person";
     private static Connection connection;
 
     @Override
-    public boolean addPerson(Person person){
+    public boolean insertPerson(Person person){
 
         try{
             connection = SingleConnectionManager.getConnection();
@@ -62,5 +62,15 @@ public class PersonDAO implements iPersonDAO {
             throwables.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean updatePerson(Person person) {
+        return false;
+    }
+
+    @Override
+    public boolean deletePerson(Person person) {
+        return false;
     }
 }

@@ -1,5 +1,8 @@
 package ru.Shniros.DAO.jdbc;
 
+import com.zaxxer.hikari.HikariDataSource;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,13 +14,15 @@ public class SingleConnectionManager {
            // + "?serverTimezone=UTC";
     private static final String username = "postgres";
     private static final String password = "12345";
-
-    private static Connection connection;
+    private static DataSource dataSource;
     public static Connection getConnection() throws SQLException {
-        if(connection == null){
-                System.out.println("connection...");
-                connection = DriverManager.getConnection(DB_URL,username,password);
+        if(dataSource == null){
+            HikariDataSource ds = new HikariDataSource();
+            ds.setJdbcUrl(DB_URL);
+            ds.setUsername(username);
+            ds.setPassword(password);
+            dataSource = ds;
         }
-        return connection;
+        return dataSource.getConnection();
     }
 }

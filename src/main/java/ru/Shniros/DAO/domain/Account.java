@@ -1,6 +1,5 @@
 package ru.Shniros.DAO.domain;
 
-import jdk.jfr.DataAmount;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
