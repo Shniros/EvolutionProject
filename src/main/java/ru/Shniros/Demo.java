@@ -1,13 +1,20 @@
 package ru.Shniros;
 
+import ru.Shniros.DAO.Impl.AccountDAO;
+import ru.Shniros.DAO.domain.Account;
 import ru.Shniros.DAO.domain.Person;
 import ru.Shniros.service.impl.PersonServiceImpl;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class Demo {
     public static void main(String[] args) {
-        PersonServiceImpl user = new PersonServiceImpl();
+        AccountDAO dao = new AccountDAO();
+        System.out.println(dao.insertAccount(
+                new Account().setName("RNCB").setBalance(BigDecimal.valueOf(1010)).setPirsonId(3)));
+
+       /* PersonServiceImpl user = new PersonServiceImpl();
         Scanner in = new Scanner(System.in);
         Person person = null;
         do{
@@ -25,6 +32,6 @@ public class Demo {
                 new Exception();
             }
         }while(person == null);
-        System.out.println("Your data:\n" + person.toString());
+        System.out.println("Your data:\n" + person.toString());*/
     }
 }

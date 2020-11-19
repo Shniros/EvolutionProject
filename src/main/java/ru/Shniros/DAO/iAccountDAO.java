@@ -1,9 +1,9 @@
 package ru.Shniros.DAO;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public interface iAccountDAO <DOMAIN,ID>{
-    LinkedList<DOMAIN> findById(ID id);
+    List<DOMAIN> findById(ID id);
     boolean insertAccount(DOMAIN domain);
     boolean updateAccount(DOMAIN domain);
     boolean deleteAccount(DOMAIN domain);

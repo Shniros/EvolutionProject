@@ -16,27 +16,29 @@ public class PersonDAO implements iPersonDAO<Person, String> {
         try{
             connection = SingleConnectionManager.getConnection();
             String insertSQL = "INSERT INTO " + TABLE_NAME +
-                    "(id, " +
-                    "first_name, " +
+                    "(first_name, " +
                     "last_name, " +
                     "email, " +
                     "password, " +
-                    "age, " +
-                    "balance)" +
-                    " VALUES(?, ?, ?, ?, ?)";
+                    " VALUES(?, ?, ?, ?)";
 
             PreparedStatement ps = connection.prepareStatement(insertSQL);
-            ps.setInt(1, person.getId());
-            ps.setString(2, person.getFirstName());
-            ps.setString(3, person.getLastName());
-            ps.setString(4, person.getEmail());
-            ps.setString(5, person.getPassword());
+            ps.setString(1, person.getFirstName());
+            ps.setString(2, person.getLastName());
+            ps.setString(3, person.getEmail());
+            ps.setString(4, person.getPassword());
             ps.executeUpdate();
-            connection.close();
             return true;
 
         }catch (SQLException throwables){
             throwables.getStackTrace();
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException conEX) {
+                conEX.printStackTrace();
+            }
         }
         return false;
     }
@@ -58,19 +60,52 @@ public class PersonDAO implements iPersonDAO<Person, String> {
                 findPerson.setPassword(rs.getString("password"));
                 return findPerson;
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException conEx) {
+                conEx.printStackTrace();
+            }
         }
         return null;
     }
-
     @Override
     public boolean updatePerson(Person person) {
+        try {
+            connection = SingleConnectionManager.getConnection();
+            String query = "UPDATE " + TABLE_NAME +
+                    " SET first_name = ?," +
+                    "\t last_name = ?," +
+                    "\t email = ?," +
+                    "\t password = ?" +
+                    " WHERE id = ?;";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1,person.getFirstName());
+            ps.setString(2,person.getLastName());
+            ps.setString(3,person.getEmail());
+            ps.setString(4,person.getPassword());
+            ps.setInt(5,person.getId());
+            ps.execute();
+            return true;
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException conEx) {
+                conEx.printStackTrace();
+            }
+        }
         return false;
     }
 
     @Override
     public boolean deletePerson(Person person) {
+        //TODO
         return false;
     }
 }
