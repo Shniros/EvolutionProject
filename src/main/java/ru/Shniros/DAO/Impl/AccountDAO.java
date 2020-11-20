@@ -62,10 +62,14 @@ public class AccountDAO implements iAccountDAO<Account, Integer> {
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException rollEx) {
+                rollEx.printStackTrace();
+            }
         }
         finally {
             try {
-                connection.rollback();
                 connection.close();
             } catch (SQLException conEx) {
                 conEx.printStackTrace();
@@ -80,20 +84,23 @@ public class AccountDAO implements iAccountDAO<Account, Integer> {
             connection = SingleConnectionManager.getConnection();
             connection.setAutoCommit(false);
             String query = "UPDATE " + TABLE_NAME +
-                           " balance = ?" +
+                           " SET balance = ?" +
                            " WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1,account.getName());
-            ps.setBigDecimal(2,account.getBalance());
-            ps.setLong(3,account.getId());
+            ps.setBigDecimal(1,account.getBalance());
+            ps.setLong(2,account.getId());
             ps.execute();
             connection.commit();
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }finally {
             try {
                 connection.rollback();
+            } catch (SQLException rollEx) {
+                rollEx.printStackTrace();
+            }
+        }finally {
+            try {
                 connection.close();
             } catch (SQLException conEx) {
                 conEx.printStackTrace();

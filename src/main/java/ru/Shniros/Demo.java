@@ -12,7 +12,7 @@ public class Demo {
     public static void main(String[] args) {
         AccountDAO dao = new AccountDAO();
         System.out.println(dao.updateAccount(
-                new Account().setId(4).setName("RNCB").setBalance(BigDecimal.valueOf(2500)).setPirsonId(3)));
+                new Account().setId(4).setName("RNCB").setBalance(BigDecimal.valueOf(3500)).setPirsonId(3)));
 
        /* PersonServiceImpl user = new PersonServiceImpl();
         Scanner in = new Scanner(System.in);
