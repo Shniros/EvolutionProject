@@ -78,9 +78,9 @@ public class PersonDAO implements iPersonDAO<Person, String> {
             connection = SingleConnectionManager.getConnection();
             String query = "UPDATE " + TABLE_NAME +
                     " SET first_name = ?," +
-                    "\t last_name = ?," +
-                    "\t email = ?," +
-                    "\t password = ?" +
+                    "last_name = ?," +
+                    "email = ?," +
+                    "password = ?" +
                     " WHERE id = ?;";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1,person.getFirstName());

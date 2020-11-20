@@ -49,6 +49,7 @@ public class AccountDAO implements iAccountDAO<Account, Integer> {
     public boolean insertAccount(Account account) {
         try {
             connection = SingleConnectionManager.getConnection();
+            connection.setAutoCommit(false);
             String query = "INSERT INTO " + TABLE_NAME +
                            "(name, balance, person_id)" +
                            " VALUES (?,?,?);";
@@ -57,12 +58,14 @@ public class AccountDAO implements iAccountDAO<Account, Integer> {
             ps.setBigDecimal(2,account.getBalance());
             ps.setInt(3,account.getPirsonId());
             ps.execute();
+            connection.commit();
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         finally {
             try {
+                connection.rollback();
                 connection.close();
             } catch (SQLException conEx) {
                 conEx.printStackTrace();
@@ -73,11 +76,35 @@ public class AccountDAO implements iAccountDAO<Account, Integer> {
 
     @Override
     public boolean updateAccount(Account account) {
+        try {
+            connection = SingleConnectionManager.getConnection();
+            connection.setAutoCommit(false);
+            String query = "UPDATE " + TABLE_NAME +
+                           " balance = ?" +
+                           " WHERE id = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1,account.getName());
+            ps.setBigDecimal(2,account.getBalance());
+            ps.setLong(3,account.getId());
+            ps.execute();
+            connection.commit();
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }finally {
+            try {
+                connection.rollback();
+                connection.close();
+            } catch (SQLException conEx) {
+                conEx.printStackTrace();
+            }
+        }
         return false;
     }
 
     @Override
     public boolean deleteAccount(Account account) {
+        //TODO
         return false;
     }
 }
