@@ -1,17 +1,28 @@
 package ru.Shniros.DAO.Impl;
 
-import ru.Shniros.DAO.iPersonDAO;
+import ru.Shniros.DAO.iDao;
 import ru.Shniros.DAO.jdbc.SingleConnectionManager;
 import ru.Shniros.DAO.domain.Person;
 
 import java.sql.*;
+import java.util.List;
 
-public class PersonDAO implements iPersonDAO<Person, String> {
+public class PersonDAO implements iDao<Person, Integer> {
     private String TABLE_NAME = "finance.person";
     private static Connection connection;
 
     @Override
-    public boolean insertPerson(Person person){
+    public Person findById(Integer integer) {
+        return null;
+    }
+
+    @Override
+    public List<Person> findByAll() {
+        return null;
+    }
+
+    @Override
+    public Person insert(Person person){
 
         try{
             connection = SingleConnectionManager.getConnection();
@@ -28,7 +39,7 @@ public class PersonDAO implements iPersonDAO<Person, String> {
             ps.setString(3, person.getEmail());
             ps.setString(4, person.getPassword());
             ps.executeUpdate();
-            return true;
+            return person;
 
         }catch (SQLException throwables){
             throwables.getStackTrace();
@@ -40,9 +51,8 @@ public class PersonDAO implements iPersonDAO<Person, String> {
                 conEX.printStackTrace();
             }
         }
-        return false;
+        return null;
     }
-    @Override
     public Person findByEmail(String email) {
         try {
             connection = SingleConnectionManager.getConnection();
@@ -73,7 +83,7 @@ public class PersonDAO implements iPersonDAO<Person, String> {
         return null;
     }
     @Override
-    public boolean updatePerson(Person person) {
+    public Person update(Person person) {
         try {
             connection = SingleConnectionManager.getConnection();
             String query = "UPDATE " + TABLE_NAME +
@@ -89,7 +99,7 @@ public class PersonDAO implements iPersonDAO<Person, String> {
             ps.setString(4,person.getPassword());
             ps.setInt(5,person.getId());
             ps.execute();
-            return true;
+            return person;
         }catch (SQLException ex){
             ex.printStackTrace();
         }
@@ -100,11 +110,11 @@ public class PersonDAO implements iPersonDAO<Person, String> {
                 conEx.printStackTrace();
             }
         }
-        return false;
+        return null;
     }
 
     @Override
-    public boolean deletePerson(Person person) {
+    public boolean delete(Integer id) {
         //TODO
         return false;
     }

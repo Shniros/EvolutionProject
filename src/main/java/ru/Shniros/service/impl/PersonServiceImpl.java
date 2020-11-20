@@ -26,7 +26,7 @@ public class PersonServiceImpl implements iPersonService {
     public boolean registration(Person person) {
         PersonDAO dao = new PersonDAO();
         if(dao.findByEmail(person.getEmail()) == null){
-            dao.insertPerson(person);;
+            dao.insert(person);;
             System.out.println("great!!");
             return true;
         }else{
