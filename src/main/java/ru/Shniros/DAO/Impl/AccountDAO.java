@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDAO implements iDao<Account, Integer> {
-    private final String TABLE_NAME = "finance.account";
-    private static Connection connection;
+    private static final String TABLE_NAME = "finance.account";
+
     public List<Account> findAllByPersonId(Integer personId){
         List<Account> accounts = new ArrayList<Account>();
         try {
-            connection = SingleConnectionManager.getConnection();
+            Connection connection = SingleConnectionManager.getConnection();
             String query = "SELECT * FROM " + TABLE_NAME +
                     " WHERE person_id = ?";
             PreparedStatement ps = connection.prepareStatement(query);
@@ -34,17 +34,11 @@ public class AccountDAO implements iDao<Account, Integer> {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException conEx) {
-                conEx.printStackTrace();
-            }
-        }
         return null;
     }
     @Override
     public List<Account> findByAll() {
+        Connection connection = null;
         List<Account> accounts = new ArrayList<Account>();
         try {
             connection = SingleConnectionManager.getConnection();
@@ -60,12 +54,11 @@ public class AccountDAO implements iDao<Account, Integer> {
             return accounts;
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException conEx) {
-                conEx.printStackTrace();
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ignored) {}
             }
         }
         return null;
@@ -77,10 +70,8 @@ public class AccountDAO implements iDao<Account, Integer> {
     }
 
     @Override
-    public Account insert(Account account) {
+    public Account insert(Account account, Connection connection){
         try {
-            connection = SingleConnectionManager.getConnection();
-            connection.setAutoCommit(false);
             String query = "INSERT INTO " + TABLE_NAME +
                            "(name, balance, person_id)" +
                            " VALUES (?,?,?);";
@@ -89,30 +80,16 @@ public class AccountDAO implements iDao<Account, Integer> {
             ps.setBigDecimal(2,account.getBalance());
             ps.setInt(3,account.getPirsonId());
             ps.execute();
-            connection.commit();
             return account;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            try {
-                connection.rollback();
-            } catch (SQLException rollEx) {
-                rollEx.printStackTrace();
-            }
-        }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException conEx) {
-                conEx.printStackTrace();
-            }
         }
         return null;
     }
 
     @Override
-    public Account update(Account account) {
+    public Account update(Account account, Connection connection){
         try {
-            connection = SingleConnectionManager.getConnection();
             connection.setAutoCommit(false);
             String query = "UPDATE " + TABLE_NAME +
                            " SET balance = ?" +
@@ -121,27 +98,15 @@ public class AccountDAO implements iDao<Account, Integer> {
             ps.setBigDecimal(1,account.getBalance());
             ps.setLong(2,account.getId());
             ps.execute();
-            connection.commit();
             return account;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            try {
-                connection.rollback();
-            } catch (SQLException rollEx) {
-                rollEx.printStackTrace();
-            }
-        }finally {
-            try {
-                connection.close();
-            } catch (SQLException conEx) {
-                conEx.printStackTrace();
-            }
         }
         return null;
     }
 
     @Override
-    public boolean delete(Integer integer) {
+    public boolean delete(Integer id, Connection connection){
         return false;
     }
 }

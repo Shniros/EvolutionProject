@@ -12,10 +12,4 @@ public class Person {
     private String email;
     private String password;
     private int id;
-
-    public Person(){}
-    public Person(String email,String password){
-        this.email = email;
-        this.password = DigestUtils.md5DigestAsHex(password.getBytes());
-    }
 }

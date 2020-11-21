@@ -14,5 +14,5 @@ public class Transaction {
     private String comment;
     private long fromAccountId;
     private long toAccountId;
-    private BigDecimal balance;
+    private BigDecimal sum;
 }

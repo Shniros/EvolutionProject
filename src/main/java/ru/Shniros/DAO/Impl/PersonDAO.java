@@ -9,10 +9,9 @@ import java.util.List;
 
 public class PersonDAO implements iDao<Person, Integer> {
     private String TABLE_NAME = "finance.person";
-    private static Connection connection;
 
     @Override
-    public Person findById(Integer integer) {
+    public Person findById(Integer id) {
         return null;
     }
 
@@ -22,10 +21,8 @@ public class PersonDAO implements iDao<Person, Integer> {
     }
 
     @Override
-    public Person insert(Person person){
-
+    public Person insert(Person person, Connection connection){
         try{
-            connection = SingleConnectionManager.getConnection();
             String insertSQL = "INSERT INTO " + TABLE_NAME +
                     "(first_name, " +
                     "last_name, " +
@@ -41,22 +38,16 @@ public class PersonDAO implements iDao<Person, Integer> {
             ps.executeUpdate();
             return person;
 
-        }catch (SQLException throwables){
-            throwables.getStackTrace();
-        }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException conEX) {
-                conEX.printStackTrace();
-            }
+        }catch (SQLException ex){
+            ex.getStackTrace();
         }
         return null;
     }
     public Person findByEmail(String email) {
-        try {
+        Connection connection = null;
+        try{
             connection = SingleConnectionManager.getConnection();
-            String query = "SELECT * FROM " + TABLE_NAME
+                String query = "SELECT * FROM " + TABLE_NAME
                     + " WHERE email = ?;";
             PreparedStatement p_stmt = connection.prepareStatement(query);
             p_stmt.setString(1,email);
@@ -72,20 +63,18 @@ public class PersonDAO implements iDao<Person, Integer> {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException conEx) {
-                conEx.printStackTrace();
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ignored) {}
             }
         }
         return null;
     }
     @Override
-    public Person update(Person person) {
+    public Person update(Person person, Connection connection) {
         try {
-            connection = SingleConnectionManager.getConnection();
             String query = "UPDATE " + TABLE_NAME +
                     " SET first_name = ?," +
                     "last_name = ?," +
@@ -103,18 +92,11 @@ public class PersonDAO implements iDao<Person, Integer> {
         }catch (SQLException ex){
             ex.printStackTrace();
         }
-        finally {
-            try {
-                connection.close();
-            } catch (SQLException conEx) {
-                conEx.printStackTrace();
-            }
-        }
         return null;
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean delete(Integer id, Connection connection){
         //TODO
         return false;
     }

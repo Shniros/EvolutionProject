@@ -2,17 +2,17 @@ package ru.Shniros;
 
 import ru.Shniros.DAO.Impl.AccountDAO;
 import ru.Shniros.DAO.domain.Account;
-import ru.Shniros.DAO.domain.Person;
-import ru.Shniros.service.impl.PersonServiceImpl;
+import ru.Shniros.DAO.jdbc.SingleConnectionManager;
 
 import java.math.BigDecimal;
-import java.util.Scanner;
+import java.sql.SQLException;
 
 public class Demo {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         AccountDAO dao = new AccountDAO();
         System.out.println(dao.update(
-                new Account().setId(4).setName("RNCB").setBalance(BigDecimal.valueOf(3500)).setPirsonId(3)));
+                new Account().setId(4).setName("RNCB").setBalance(BigDecimal.valueOf(3500)).setPirsonId(3),
+                SingleConnectionManager.getConnection()));
 
        /* PersonServiceImpl user = new PersonServiceImpl();
         Scanner in = new Scanner(System.in);

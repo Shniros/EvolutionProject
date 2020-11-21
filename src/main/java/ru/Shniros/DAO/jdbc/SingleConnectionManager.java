@@ -24,4 +24,5 @@ public class SingleConnectionManager {
         }
         return dataSource.getConnection();
     }
+    private SingleConnectionManager(){}
 }
