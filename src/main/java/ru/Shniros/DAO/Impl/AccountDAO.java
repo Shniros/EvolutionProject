@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountDAO implements iDao<Account, Integer> {
+public class AccountDAO implements iDao<Account, Long> {
     private static final String TABLE_NAME = "finance.account";
 
     public List<Account> findAllByPersonId(Integer personId){
@@ -65,39 +65,22 @@ public class AccountDAO implements iDao<Account, Integer> {
     }
 
     @Override
-    public Account findById(Integer id) {
-        return null;
-    }
-
-    @Override
-    public Account insert(Account account, Connection connection){
+    public Account findById(Long id) {
+        Connection connection = null;
         try {
-            String query = "INSERT INTO " + TABLE_NAME +
-                           "(name, balance, person_id)" +
-                           " VALUES (?,?,?);";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1,account.getName());
-            ps.setBigDecimal(2,account.getBalance());
-            ps.setInt(3,account.getPirsonId());
-            ps.execute();
-            return account;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public Account update(Account account, Connection connection){
-        try {
-            connection.setAutoCommit(false);
-            String query = "UPDATE " + TABLE_NAME +
-                           " SET balance = ?" +
+            connection = SingleConnectionManager.getConnection();
+            String query = "SELECT * FROM " + TABLE_NAME +
                            " WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setBigDecimal(1,account.getBalance());
-            ps.setLong(2,account.getId());
-            ps.execute();
+            ps.setLong(1,id);
+            ResultSet rs = ps.executeQuery();
+            Account account = new Account();
+            while (rs.next()){
+                account.setId(rs.getInt("id"));
+                account.setName(rs.getString("name"));
+                account.setBalance(rs.getBigDecimal("balance"));
+                account.setPirsonId(rs.getInt("person_id"));
+            }
             return account;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -106,7 +89,32 @@ public class AccountDAO implements iDao<Account, Integer> {
     }
 
     @Override
-    public boolean delete(Integer id, Connection connection){
+    public Account insert(Account account, Connection connection) throws SQLException {
+        String query = "INSERT INTO " + TABLE_NAME +
+                           "(name, balance, person_id)" +
+                           " VALUES (?,?,?);";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setString(1,account.getName());
+        ps.setBigDecimal(2,account.getBalance());
+        ps.setInt(3,account.getPirsonId());
+        ps.execute();
+        return account;
+    }
+
+    @Override
+    public Account update(Account account, Connection connection) throws SQLException {
+        String query = "UPDATE " + TABLE_NAME +
+                           " SET balance = ?" +
+                           " WHERE id = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setBigDecimal(1,account.getBalance());
+        ps.setLong(2,account.getId());
+        ps.execute();
+        return account;
+    }
+
+    @Override
+    public boolean delete(Long id, Connection connection){
         return false;
     }
 }

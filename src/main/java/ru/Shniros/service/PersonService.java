@@ -7,7 +7,7 @@ import ru.Shniros.DAO.jdbc.SingleConnectionManager;
 
 import java.sql.SQLException;
 
-public class PersonServiceImpl{
+public class PersonService {
     Person curPerson;
 
     public Person login(String email, String password) {

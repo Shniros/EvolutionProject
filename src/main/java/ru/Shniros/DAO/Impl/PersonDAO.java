@@ -5,6 +5,7 @@ import ru.Shniros.DAO.jdbc.SingleConnectionManager;
 import ru.Shniros.DAO.domain.Person;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersonDAO implements iDao<Person, Integer> {
@@ -12,36 +13,68 @@ public class PersonDAO implements iDao<Person, Integer> {
 
     @Override
     public Person findById(Integer id) {
+        Connection connection = null;
+        try {
+            connection = SingleConnectionManager.getConnection();
+            String queru = "SELECT * FROM " + TABLE_NAME +
+                           " WHERE id = ?";
+            PreparedStatement ps = connection.prepareStatement(queru);
+            ps.setInt(1,id);
+            ResultSet rs = ps.executeQuery();
+            Person person = new Person();
+            while (rs.next()){
+                person.setId(rs.getInt("id"));
+                person.setEmail(rs.getString("email"));
+                person.setPassword(rs.getString("password"));
+                person.setFirstName(rs.getString("first_name"));
+                person.setLastName(rs.getString("last_name"));
+            }
+            return person;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public List<Person> findByAll() {
+        Connection connection = null;
+        try {
+            connection = SingleConnectionManager.getConnection();
+            String queru = "SELECT * FROM " + TABLE_NAME ;
+            PreparedStatement ps = connection.prepareStatement(queru);
+            ResultSet rs = ps.executeQuery();
+            List<Person> people = new ArrayList<Person>();
+            while (rs.next()){
+                people.add(new Person().setId(rs.getInt("id"))
+                        .setEmail(rs.getString("email"))
+                        .setPassword(rs.getString("password"))
+                        .setFirstName(rs.getString("first_name"))
+                        .setLastName(rs.getString("last_name")));
+            }
+            return people;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
         return null;
     }
 
     @Override
-    public Person insert(Person person, Connection connection){
-        try{
-            String insertSQL = "INSERT INTO " + TABLE_NAME +
+    public Person insert(Person person, Connection connection) throws SQLException {
+        String insertSQL = "INSERT INTO " + TABLE_NAME +
                     "(first_name, " +
                     "last_name, " +
                     "email, " +
-                    "password, " +
+                    "password)" +
                     " VALUES(?, ?, ?, ?)";
 
-            PreparedStatement ps = connection.prepareStatement(insertSQL);
-            ps.setString(1, person.getFirstName());
-            ps.setString(2, person.getLastName());
-            ps.setString(3, person.getEmail());
-            ps.setString(4, person.getPassword());
-            ps.executeUpdate();
-            return person;
-
-        }catch (SQLException ex){
-            ex.getStackTrace();
-        }
-        return null;
+        PreparedStatement ps = connection.prepareStatement(insertSQL);
+        ps.setString(1, person.getFirstName());
+        ps.setString(2, person.getLastName());
+        ps.setString(3, person.getEmail());
+        ps.setString(4, person.getPassword());
+        ps.executeUpdate();
+        return person;
     }
     public Person findByEmail(String email) {
         Connection connection = null;
@@ -73,26 +106,21 @@ public class PersonDAO implements iDao<Person, Integer> {
         return null;
     }
     @Override
-    public Person update(Person person, Connection connection) {
-        try {
-            String query = "UPDATE " + TABLE_NAME +
+    public Person update(Person person, Connection connection) throws SQLException {
+        String query = "UPDATE " + TABLE_NAME +
                     " SET first_name = ?," +
                     "last_name = ?," +
                     "email = ?," +
                     "password = ?" +
                     " WHERE id = ?;";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1,person.getFirstName());
-            ps.setString(2,person.getLastName());
-            ps.setString(3,person.getEmail());
-            ps.setString(4,person.getPassword());
-            ps.setInt(5,person.getId());
-            ps.execute();
-            return person;
-        }catch (SQLException ex){
-            ex.printStackTrace();
-        }
-        return null;
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setString(1,person.getFirstName());
+        ps.setString(2,person.getLastName());
+        ps.setString(3,person.getEmail());
+        ps.setString(4,person.getPassword());
+        ps.setInt(5,person.getId());
+        ps.execute();
+        return person;
     }
 
     @Override

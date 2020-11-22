@@ -2,7 +2,9 @@ package ru.Shniros;
 
 import ru.Shniros.DAO.Impl.AccountDAO;
 import ru.Shniros.DAO.domain.Account;
+import ru.Shniros.DAO.domain.Transaction;
 import ru.Shniros.DAO.jdbc.SingleConnectionManager;
+import ru.Shniros.service.TransactionService;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -10,9 +12,8 @@ import java.sql.SQLException;
 public class Demo {
     public static void main(String[] args) throws SQLException {
         AccountDAO dao = new AccountDAO();
-        System.out.println(dao.update(
-                new Account().setId(4).setName("RNCB").setBalance(BigDecimal.valueOf(3500)).setPirsonId(3),
-                SingleConnectionManager.getConnection()));
+        TransactionService tc = new TransactionService();
+        tc.CreateTransaction(2L,3L,BigDecimal.valueOf(2500));
 
        /* PersonServiceImpl user = new PersonServiceImpl();
         Scanner in = new Scanner(System.in);
