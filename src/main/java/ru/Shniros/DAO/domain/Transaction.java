@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class Transaction {
-    private int id;
+    private long id;
     private Date date;
     private String comment;
     private long fromAccountId;
