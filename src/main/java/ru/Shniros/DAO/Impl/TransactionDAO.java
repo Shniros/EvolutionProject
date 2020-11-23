@@ -107,6 +107,7 @@ public class TransactionDAO implements iDao<Transaction,Long> {
         ps.setLong(3,transaction.getFromAccountId());
         ps.setLong(4,transaction.getToAccountId());
         ps.setBigDecimal(5,transaction.getSum());
+        ps.setLong(6,transaction.getId());
         ps.execute();
         return transaction;
     }
