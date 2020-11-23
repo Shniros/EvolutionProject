@@ -1,7 +1,7 @@
 package ru.Shniros.service;
 
 import org.springframework.util.DigestUtils;
-import ru.Shniros.DAO.Impl.PersonDAO;
+import ru.Shniros.DAO.Impl.PersonDao;
 import ru.Shniros.DAO.domain.Person;
 import ru.Shniros.DAO.jdbc.SingleConnectionManager;
 
@@ -11,7 +11,7 @@ public class PersonService {
     Person curPerson;
 
     public Person login(String email, String password) {
-        PersonDAO dao = new PersonDAO();
+        PersonDao dao = new PersonDao();
         curPerson = dao.findByEmail(email);
         if (curPerson != null) {
             if (DigestUtils.md5DigestAsHex(password.getBytes()).equals(
@@ -23,7 +23,7 @@ public class PersonService {
     }
 
     public boolean registration(Person person) {
-        PersonDAO dao = new PersonDAO();
+        PersonDao dao = new PersonDao();
         if(dao.findByEmail(person.getEmail()) == null){
             try {
                 dao.insert(person, SingleConnectionManager.getConnection());

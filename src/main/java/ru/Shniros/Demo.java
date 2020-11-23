@@ -1,9 +1,7 @@
 package ru.Shniros;
 
-import ru.Shniros.DAO.Impl.AccountDAO;
-import ru.Shniros.DAO.domain.Account;
-import ru.Shniros.DAO.domain.Transaction;
-import ru.Shniros.DAO.jdbc.SingleConnectionManager;
+import ru.Shniros.DAO.Impl.AccountDao;
+import ru.Shniros.DAO.domain.TransactionCategory;
 import ru.Shniros.service.TransactionService;
 
 import java.math.BigDecimal;
@@ -11,9 +9,9 @@ import java.sql.SQLException;
 
 public class Demo {
     public static void main(String[] args) throws SQLException {
-        AccountDAO dao = new AccountDAO();
+        AccountDao dao = new AccountDao();
         TransactionService tc = new TransactionService();
-        tc.CreateTransaction(2L,3L,BigDecimal.valueOf(2500));
+        tc.CreateTransaction(new TransactionCategory().setId(1) ,2L,3L,BigDecimal.valueOf(2500));
 
        /* PersonServiceImpl user = new PersonServiceImpl();
         Scanner in = new Scanner(System.in);

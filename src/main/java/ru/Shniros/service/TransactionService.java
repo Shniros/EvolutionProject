@@ -1,40 +1,37 @@
 package ru.Shniros.service;
 
-import ru.Shniros.DAO.Impl.AccountDAO;
-import ru.Shniros.DAO.Impl.PersonDAO;
-import ru.Shniros.DAO.Impl.TransactionDAO;
+import ru.Shniros.DAO.Impl.AccountDao;
+import ru.Shniros.DAO.Impl.TransactionDao;
 import ru.Shniros.DAO.domain.Account;
-import ru.Shniros.DAO.domain.Person;
 import ru.Shniros.DAO.domain.Transaction;
+import ru.Shniros.DAO.domain.TransactionCategory;
 import ru.Shniros.DAO.jdbc.SingleConnectionManager;
+import ru.Shniros.exception.CommonServiceException;
 
-import java.beans.Expression;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.util.Calendar;
 import java.util.Date;
 
 public class TransactionService {
-    public void CreateTransaction(Long fromAccountId, Long toAccountId, BigDecimal sum){
+    public void CreateTransaction(TransactionCategory category, Long fromAccountId, Long toAccountId, BigDecimal sum){
         Connection connection = null;
         try {
             connection = SingleConnectionManager.getConnection();
             connection.setAutoCommit(false);
-            AccountDAO accountDAO = new AccountDAO();
+            AccountDao accountDAO = new AccountDao();
             Account fromAccount = accountDAO.findById(fromAccountId);
             Account toAccount = accountDAO.findById(toAccountId);
 
             if(fromAccount == null){
-                throw new Exception();
+                throw new CommonServiceException("Can't find account id:" + fromAccount.getId());
             }
             if(toAccount == null){
-                throw new Exception();
+                throw new CommonServiceException("Can't find account id:" + toAccount.getId());
             }
             BigDecimal fromAccountBalance = fromAccount.getBalance();
             if(fromAccountBalance.compareTo(sum) < 0){
-                throw new Exception();
+                throw new CommonServiceException("Insufficient funds in the account:" + fromAccountBalance.add(sum.negate()));
             }
             fromAccount.setBalance(fromAccountBalance.add(sum.negate()));
             toAccount.setBalance(toAccount.getBalance().add(sum));
@@ -45,7 +42,8 @@ public class TransactionService {
             transaction.setToAccountId(toAccount.getId());
             transaction.setSum(sum);
             transaction.setDate(new Date());
-            new TransactionDAO().insert(transaction,connection);
+            transaction.setCategoryId(category.getId());
+            new TransactionDao().insert(transaction,connection);
             connection.commit();
 
         } catch (Exception ex) {

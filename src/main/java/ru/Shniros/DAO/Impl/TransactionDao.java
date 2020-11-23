@@ -3,12 +3,13 @@ package ru.Shniros.DAO.Impl;
 import ru.Shniros.DAO.domain.Transaction;
 import ru.Shniros.DAO.iDao;
 import ru.Shniros.DAO.jdbc.SingleConnectionManager;
+import ru.Shniros.exception.CommonServiceException;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionDAO implements iDao<Transaction,Long> {
+public class TransactionDao implements iDao<Transaction,Long> {
     private static final String TABLE_NAME = "finance.transaction";
 
     @Override
@@ -29,6 +30,7 @@ public class TransactionDAO implements iDao<Transaction,Long> {
                 transaction.setToAccountId(rs.getLong("to_account_id"));
                 transaction.setSum(rs.getBigDecimal("sum"));
                 transaction.setComment(rs.getString("comment"));
+                transaction.setCategoryId(rs.getInt("category_id"));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -58,7 +60,8 @@ public class TransactionDAO implements iDao<Transaction,Long> {
                                 .setFromAccountId(rs.getLong("from_account_id"))
                                 .setToAccountId(rs.getLong("to_account_id"))
                                 .setSum(rs.getBigDecimal("sum"))
-                                .setComment(rs.getString("comment")));
+                                .setComment(rs.getString("comment"))
+                                .setCategoryId(rs.getInt("category_id")));
             }
             return list;
         } catch (SQLException ex) {
@@ -80,14 +83,16 @@ public class TransactionDAO implements iDao<Transaction,Long> {
                         "comment," +
                         "from_account_id," +
                         "to_account_id," +
-                        "sum)" +
-                       " VALUES (?,?,?,?,?)";
+                        "sum," +
+                        "category_id)" +
+                       " VALUES (?,?,?,?,?,?)";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setTimestamp(1,new Timestamp(transaction.getDate().getTime()));
         ps.setString(2,transaction.getComment());
         ps.setLong(3,transaction.getFromAccountId());
         ps.setLong(4,transaction.getToAccountId());
         ps.setBigDecimal(5,transaction.getSum());
+        ps.setInt(6,transaction.getCategoryId());
         ps.execute();
         return transaction;
     }
@@ -100,6 +105,7 @@ public class TransactionDAO implements iDao<Transaction,Long> {
                 "from_account_id = ?," +
                 "to_account_id = ?" +
                 "sum = ?" +
+                "category_id = ?" +
                 " WHERE id = ?;";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setTimestamp(1,new Timestamp(transaction.getDate().getTime()));
@@ -107,7 +113,8 @@ public class TransactionDAO implements iDao<Transaction,Long> {
         ps.setLong(3,transaction.getFromAccountId());
         ps.setLong(4,transaction.getToAccountId());
         ps.setBigDecimal(5,transaction.getSum());
-        ps.setLong(6,transaction.getId());
+        ps.setInt(6,transaction.getCategoryId());
+        ps.setLong(7,transaction.getId());
         ps.execute();
         return transaction;
     }

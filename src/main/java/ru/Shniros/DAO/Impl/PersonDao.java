@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonDAO implements iDao<Person, Integer> {
+public class PersonDao implements iDao<Person, Integer> {
     private String TABLE_NAME = "finance.person";
 
     @Override

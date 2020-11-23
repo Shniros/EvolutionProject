@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountDAO implements iDao<Account, Long> {
+public class AccountDao implements iDao<Account, Long> {
     private static final String TABLE_NAME = "finance.account";
 
     public List<Account> findAllByPersonId(Integer personId){
