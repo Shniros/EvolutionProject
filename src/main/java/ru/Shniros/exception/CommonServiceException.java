@@ -9,8 +9,4 @@ public class CommonServiceException extends Exception{
         logger = Logger.getLogger(className);
         logger.log(Level.WARNING,message);
     }
-    public CommonServiceException(String className,String message,Exception ex){
-        logger = Logger.getLogger(className);
-        logger.log(Level.WARNING,message,ex);
-    }
 }

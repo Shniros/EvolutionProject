@@ -56,26 +56,38 @@ public class TransactionCategoryDao implements iDao<TransactionCategory, Integer
     }
 
     @Override
-    public TransactionCategory insert(TransactionCategory category, Connection connection) throws SQLException {
-        String query = "INSERT INTO " + TABLE_NAME +
-                " (name)" +
-                " VALUES (?)";
-        PreparedStatement ps = connection.prepareStatement(query);
-        ps.setString(1,category.getName());
-        ps.execute();
-        return category;
+    public TransactionCategory insert(TransactionCategory category, Connection connection){
+        try {
+            String query = "INSERT INTO " + TABLE_NAME +
+                    " (name)" +
+                    " VALUES (?)";
+            PreparedStatement ps = null;
+            ps = connection.prepareStatement(query);
+            ps.setString(1,category.getName());
+            ps.execute();
+            return category;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     @Override
-    public TransactionCategory update(TransactionCategory category, Connection connection) throws SQLException {
-        String query = "UPDATE " + TABLE_NAME +
-                " SET name = ?" +
-                " WHERE = ?";
-        PreparedStatement ps = connection.prepareStatement(query);
-        ps.setString(1,category.getName());
-        ps.setInt(2,category.getId());
-        ps.execute();
-        return category;
+    public TransactionCategory update(TransactionCategory category, Connection connection){
+        try {
+            String query = "UPDATE " + TABLE_NAME +
+                    " SET name = ?" +
+                    " WHERE = ?";
+            PreparedStatement ps = null;
+            ps = connection.prepareStatement(query);
+            ps.setString(1,category.getName());
+            ps.setInt(2,category.getId());
+            ps.execute();
+            return category;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     @Override

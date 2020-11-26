@@ -1,7 +1,9 @@
 package ru.Shniros;
 
 import ru.Shniros.DBase.DAO.AccountDao;
+import ru.Shniros.DBase.DAO.TransactionCategoryDao;
 import ru.Shniros.DBase.domain.TransactionCategory;
+import ru.Shniros.DBase.jdbc.SingleConnectionManager;
 import ru.Shniros.service.TransactionService;
 
 import java.math.BigDecimal;
@@ -9,10 +11,12 @@ import java.sql.SQLException;
 
 public class Demo {
     public static void main(String[] args) throws SQLException {
+        //TransactionCategoryDao category = new TransactionCategoryDao();
+        //category.insert(new TransactionCategory().setId(1).setName("Leisure"), SingleConnectionManager.getConnection());
         AccountDao dao = new AccountDao();
-        TransactionService tc = new TransactionService();
-        tc.CreateTransaction(new TransactionCategory().setId(1) ,2L,3L,BigDecimal.valueOf(2500));
-
+       // TransactionService tc = new TransactionService();
+       // tc.CreateTransaction(new TransactionCategory().setId(1) ,2L,3L,BigDecimal.valueOf(2500));
+        System.out.println(dao.countAccountByPersonId(1));
        /* PersonServiceImpl user = new PersonServiceImpl();
         Scanner in = new Scanner(System.in);
         Person person = null;

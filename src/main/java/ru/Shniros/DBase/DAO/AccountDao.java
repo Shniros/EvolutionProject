@@ -90,28 +90,42 @@ public class AccountDao implements iDao<Account, Long> {
     }
 
     @Override
-    public Account insert(Account account, Connection connection) throws SQLException {
-        String query = "INSERT INTO " + TABLE_NAME +
-                           "(name, balance, person_id)" +
-                           " VALUES (?,?,?);";
-        PreparedStatement ps = connection.prepareStatement(query);
-        ps.setString(1,account.getName());
-        ps.setBigDecimal(2,account.getBalance());
-        ps.setInt(3,account.getPirsonId());
-        ps.execute();
-        return account;
+    public Account insert(Account account, Connection connection){
+
+        try {
+            String query = "INSERT INTO " + TABLE_NAME +
+                    "(name, balance, person_id)" +
+                    " VALUES (?,?,?);";
+            PreparedStatement ps = null;
+            ps = connection.prepareStatement(query);
+            ps.setString(1,account.getName());
+            ps.setBigDecimal(2,account.getBalance());
+            ps.setInt(3,account.getPirsonId());
+            ps.execute();
+            return account;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     @Override
-    public Account update(Account account, Connection connection) throws SQLException {
-        String query = "UPDATE " + TABLE_NAME +
-                           " SET balance = ?" +
-                           " WHERE id = ?";
-        PreparedStatement ps = connection.prepareStatement(query);
-        ps.setBigDecimal(1,account.getBalance());
-        ps.setLong(2,account.getId());
-        ps.execute();
-        return account;
+    public Account update(Account account, Connection connection){
+
+        try {
+            String query = "UPDATE " + TABLE_NAME +
+                    " SET balance = ?" +
+                    " WHERE id = ?";
+            PreparedStatement ps = null;
+            ps = connection.prepareStatement(query);
+            ps.setBigDecimal(1,account.getBalance());
+            ps.setLong(2,account.getId());
+            ps.execute();
+            return account;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+       return null;
     }
 
     @Override
@@ -129,7 +143,7 @@ public class AccountDao implements iDao<Account, Long> {
             ResultSet rs = ps.executeQuery();
             Integer result = null;
             while (rs.next()){
-             result = rs.getInt("count(*)");
+             result = rs.getInt("count");
             }
             if(result != null){
                 return result;
