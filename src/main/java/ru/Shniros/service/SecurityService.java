@@ -43,7 +43,7 @@ public class SecurityService {
         } catch (Exception ex) {
             ex.printStackTrace();
             try {
-                throw new CommonServiceException(SecurityService.class.getName(), "SQL: " + ex.toString(), ex);
+                throw new CommonServiceException(SecurityService.class.getName(), "Registration error,," + ex.toString(), ex);
             }catch (Exception ignored){}
         }
         return null;

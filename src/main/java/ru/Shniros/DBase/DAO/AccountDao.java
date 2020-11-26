@@ -135,7 +135,7 @@ public class AccountDao implements iDao<Account, Long> {
                 return result;
             }else {
                 try {
-                    throw new CommonServiceException("ResultSet return null");
+                    throw new CommonServiceException(AccountDao.class.getName(),"ResultSet return null");
                 } catch (CommonServiceException ignored) {}
             }
 
