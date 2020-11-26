@@ -24,14 +24,15 @@ public class TransactionService {
             Account toAccount = accountDAO.findById(toAccountId);
 
             if(fromAccount == null){
-                throw new CommonServiceException("Can't find account id:" + fromAccount.getId());
+                throw new CommonServiceException(TransactionService.class.getName(),"Can't find account id:" + fromAccount.getId());
             }
             if(toAccount == null){
-                throw new CommonServiceException("Can't find account id:" + toAccount.getId());
+                throw new CommonServiceException(TransactionService.class.getName(),"Can't find account id:" + toAccount.getId());
             }
             BigDecimal fromAccountBalance = fromAccount.getBalance();
             if(fromAccountBalance.compareTo(sum) < 0){
-                throw new CommonServiceException("Insufficient funds in the account:" + fromAccountBalance.add(sum.negate()));
+                throw new CommonServiceException(TransactionService.class.getName(),
+                        "Insufficient funds in the account:" + fromAccountBalance.add(sum.negate()));
             }
             fromAccount.setBalance(fromAccountBalance.add(sum.negate()));
             toAccount.setBalance(toAccount.getBalance().add(sum));

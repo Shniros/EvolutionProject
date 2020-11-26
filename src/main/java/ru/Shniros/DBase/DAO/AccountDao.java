@@ -3,6 +3,7 @@ package ru.Shniros.DBase.DAO;
 import ru.Shniros.DBase.domain.Account;
 import ru.Shniros.DBase.DAO.iDao;
 import ru.Shniros.DBase.jdbc.SingleConnectionManager;
+import ru.Shniros.exception.CommonServiceException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -116,5 +117,31 @@ public class AccountDao implements iDao<Account, Long> {
     @Override
     public boolean delete(Long id, Connection connection){
         return false;
+    }
+
+    public Integer countAccountByPersonId(Integer personId){
+        try {
+            Connection connection = SingleConnectionManager.getConnection();
+            String query = "SELECT count(*) FROM " + TABLE_NAME +
+                    " WHERE person_id = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1,personId);
+            ResultSet rs = ps.executeQuery();
+            Integer result = null;
+            while (rs.next()){
+             result = rs.getInt("count(*)");
+            }
+            if(result != null){
+                return result;
+            }else {
+                try {
+                    throw new CommonServiceException("ResultSet return null");
+                } catch (CommonServiceException ignored) {}
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }
