@@ -1,11 +1,11 @@
 package ru.Shniros.service;
 
-import ru.Shniros.DAO.Impl.AccountDao;
-import ru.Shniros.DAO.Impl.TransactionDao;
-import ru.Shniros.DAO.domain.Account;
-import ru.Shniros.DAO.domain.Transaction;
-import ru.Shniros.DAO.domain.TransactionCategory;
-import ru.Shniros.DAO.jdbc.SingleConnectionManager;
+import ru.Shniros.DBase.DAO.AccountDao;
+import ru.Shniros.DBase.DAO.TransactionDao;
+import ru.Shniros.DBase.domain.Account;
+import ru.Shniros.DBase.domain.Transaction;
+import ru.Shniros.DBase.domain.TransactionCategory;
+import ru.Shniros.DBase.jdbc.SingleConnectionManager;
 import ru.Shniros.exception.CommonServiceException;
 
 import java.math.BigDecimal;

@@ -1,8 +1,8 @@
-package ru.Shniros.DAO.Impl;
+package ru.Shniros.DBase.DAO;
 
-import ru.Shniros.DAO.domain.Account;
-import ru.Shniros.DAO.iDao;
-import ru.Shniros.DAO.jdbc.SingleConnectionManager;
+import ru.Shniros.DBase.domain.Account;
+import ru.Shniros.DBase.DAO.iDao;
+import ru.Shniros.DBase.jdbc.SingleConnectionManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

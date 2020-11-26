@@ -1,4 +1,4 @@
-package ru.Shniros.DAO;
+package ru.Shniros.DBase.DAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;

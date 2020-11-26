@@ -1,7 +1,7 @@
 package ru.Shniros;
 
-import ru.Shniros.DAO.Impl.AccountDao;
-import ru.Shniros.DAO.domain.TransactionCategory;
+import ru.Shniros.DBase.DAO.AccountDao;
+import ru.Shniros.DBase.domain.TransactionCategory;
 import ru.Shniros.service.TransactionService;
 
 import java.math.BigDecimal;

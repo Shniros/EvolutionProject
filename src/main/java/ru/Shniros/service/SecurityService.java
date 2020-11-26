@@ -1,13 +1,13 @@
 package ru.Shniros.service;
 
 import org.springframework.util.DigestUtils;
-import ru.Shniros.DAO.Impl.PersonDao;
-import ru.Shniros.DAO.domain.Person;
-import ru.Shniros.DAO.jdbc.SingleConnectionManager;
+import ru.Shniros.DBase.DAO.PersonDao;
+import ru.Shniros.DBase.domain.Person;
+import ru.Shniros.DBase.jdbc.SingleConnectionManager;
 
 import java.sql.SQLException;
 
-public class PersonService {
+public class SecurityService {
     Person curPerson;
 
     public Person login(String email, String password) {

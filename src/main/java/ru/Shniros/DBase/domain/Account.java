@@ -1,4 +1,4 @@
-package ru.Shniros.DAO.domain;
+package ru.Shniros.DBase.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
