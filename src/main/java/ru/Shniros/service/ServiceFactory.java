@@ -12,19 +12,20 @@ public class ServiceFactory {
 
     public static TransactionService getTransactionService() throws SQLException {
         if(transactionService == null){
-            transactionService = new TransactionService(DaoFactory.getAccountDao(),DaoFactory.getTransactionDao());
+            transactionService = new TransactionService(DaoFactory.getAccountDao(),
+                    DaoFactory.getTransactionDao(), DaoFactory.getDataSource());
         }
         return transactionService;
     }
     public static AccountService getAccountService() throws SQLException {
         if(accountService == null){
-            accountService = new AccountService(DaoFactory.getAccountDao());
+            accountService = new AccountService(DaoFactory.getAccountDao(), DaoFactory.getDataSource());
         }
         return accountService;
     }
     public static SecurityService getSecurityService() throws SQLException {
         if(securityService == null){
-            securityService = new SecurityService(DaoFactory.getPersonDao(), getDigestService());
+            securityService = new SecurityService(DaoFactory.getPersonDao(), getDigestService(), DaoFactory.getDataSource());
         }
         return securityService;
     }

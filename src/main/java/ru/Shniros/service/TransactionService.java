@@ -7,6 +7,7 @@ import ru.Shniros.DBase.domain.Account;
 import ru.Shniros.DBase.domain.Transaction;
 import ru.Shniros.exception.CommonServiceException;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,16 +16,18 @@ import java.util.Date;
 public class TransactionService {
     private final AccountDao accountDao;
     private final TransactionDao transactionDao;
+    private final DataSource dataSource;
 
-    public TransactionService(AccountDao accountDao, TransactionDao transactionDao) {
+    public TransactionService(AccountDao accountDao, TransactionDao transactionDao, DataSource dataSource) {
         this.accountDao = accountDao;
         this.transactionDao = transactionDao;
+        this.dataSource = dataSource;
     }
 
     public void CreateTransaction(Integer categoryId, Long fromAccountId, Long toAccountId, BigDecimal sum){
         Connection connection = null;
         try {
-            connection = DaoFactory.getDataSource().getConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
 
             Account fromAccount = accountDao.findById(fromAccountId);
