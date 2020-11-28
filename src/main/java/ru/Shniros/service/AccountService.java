@@ -1,10 +1,10 @@
-package dataSource.Shniros.service;
+package ru.Shniros.service;
 
-import dataSource.Shniros.DBase.DAO.AccountDao;
-import dataSource.Shniros.DBase.DAO.DaoFactory;
-import dataSource.Shniros.DBase.domain.Account;
-import dataSource.Shniros.DBase.domain.Person;
-import dataSource.Shniros.exception.CommonServiceException;
+import ru.Shniros.DBase.DAO.AccountDao;
+import ru.Shniros.DBase.DAO.DaoFactory;
+import ru.Shniros.DBase.domain.Account;
+import ru.Shniros.DBase.domain.Person;
+import ru.Shniros.exception.CommonServiceException;
 
 import java.sql.SQLException;
 

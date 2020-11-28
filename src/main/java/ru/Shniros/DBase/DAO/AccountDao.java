@@ -1,7 +1,6 @@
-package dataSource.Shniros.DBase.DAO;
+package ru.Shniros.DBase.DAO;
 
-import dataSource.Shniros.DBase.domain.Account;
-import dataSource.Shniros.exception.CommonServiceException;
+import ru.Shniros.DBase.domain.Account;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

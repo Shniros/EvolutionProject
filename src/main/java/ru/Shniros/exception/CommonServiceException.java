@@ -1,4 +1,4 @@
-package dataSource.Shniros.exception;
+package ru.Shniros.exception;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

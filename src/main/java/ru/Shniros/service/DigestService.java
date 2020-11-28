@@ -1,4 +1,4 @@
-package dataSource.Shniros.service;
+package ru.Shniros.service;
 
 import org.springframework.util.DigestUtils;
 
