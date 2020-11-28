@@ -9,9 +9,10 @@ import java.sql.Connection;
 
 public class SecurityService {
     private final PersonDao personDao;
-
-    public SecurityService(PersonDao personDao) {
+    private final  DigestService digestService;
+    public SecurityService(PersonDao personDao, DigestService digestService) {
         this.personDao = personDao;
+        this.digestService = digestService;
     }
 
     public Person login(String email, String password){
@@ -19,7 +20,7 @@ public class SecurityService {
         Person curPerson = personDao.findByEmail(email);
         try {
             if (curPerson != null) {
-                if (DigestService.getHash(password).equals(
+                if (digestService.getHash(password).equals(
                         curPerson.getPassword())) {
                     return curPerson;
                 } else {

@@ -8,6 +8,7 @@ public class ServiceFactory {
     private static AccountService accountService;
     private static TransactionService transactionService;
     private static SecurityService securityService;
+    private static DigestService digestService;
 
     public static TransactionService getTransactionService() throws SQLException {
         if(transactionService == null){
@@ -23,8 +24,14 @@ public class ServiceFactory {
     }
     public static SecurityService getSecurityService() throws SQLException {
         if(securityService == null){
-            securityService = new SecurityService(DaoFactory.getPersonDao());
+            securityService = new SecurityService(DaoFactory.getPersonDao(), getDigestService());
         }
         return securityService;
+    }
+    public static DigestService getDigestService(){
+        if(digestService == null){
+            digestService = new DigestService();
+        }
+        return digestService;
     }
 }
