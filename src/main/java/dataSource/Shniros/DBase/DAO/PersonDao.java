@@ -1,35 +1,39 @@
-package ru.Shniros.DBase.DAO;
+package dataSource.Shniros.DBase.DAO;
 
-import ru.Shniros.DBase.DAO.iDao;
-import ru.Shniros.DBase.jdbc.SingleConnectionManager;
-import ru.Shniros.DBase.domain.Person;
+import dataSource.Shniros.DBase.domain.Person;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PersonDao implements iDao<Person, Integer> {
     private String TABLE_NAME = "finance.person";
+    private final DataSource dataSource;
+
+    public PersonDao(DataSource dataSource){
+        this.dataSource = dataSource;
+    }
 
     @Override
     public Person findById(Integer id) {
-        Connection connection = null;
-        try {
-            connection = SingleConnectionManager.getConnection();
-            String queru = "SELECT * FROM " + TABLE_NAME +
-                           " WHERE id = ?";
+        String queru = "SELECT * FROM " + TABLE_NAME +
+                " WHERE id = ?";
+
+        try (Connection connection = dataSource.getConnection())
+        {
             PreparedStatement ps = connection.prepareStatement(queru);
             ps.setInt(1,id);
             ResultSet rs = ps.executeQuery();
             Person person = new Person();
-            while (rs.next()){
+            if(rs.next()){
                 person.setId(rs.getInt("id"));
                 person.setEmail(rs.getString("email"));
                 person.setPassword(rs.getString("password"));
                 person.setFirstName(rs.getString("first_name"));
                 person.setLastName(rs.getString("last_name"));
+                return person;
             }
-            return person;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -38,11 +42,10 @@ public class PersonDao implements iDao<Person, Integer> {
 
     @Override
     public List<Person> findByAll() {
-        Connection connection = null;
-        try {
-            connection = SingleConnectionManager.getConnection();
-            String queru = "SELECT * FROM " + TABLE_NAME ;
-            PreparedStatement ps = connection.prepareStatement(queru);
+        final String query = "SELECT * FROM " + TABLE_NAME;
+        try (Connection connection = dataSource.getConnection())
+        {
+            PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             List<Person> people = new ArrayList<Person>();
             while (rs.next()){
@@ -61,15 +64,13 @@ public class PersonDao implements iDao<Person, Integer> {
 
     @Override
     public Person insert(Person person, Connection connection){
-
-        try {
-            String insertSQL = "INSERT INTO " + TABLE_NAME +
-                    "(first_name, " +
-                    "last_name, " +
-                    "email, " +
-                    "password)" +
-                    " VALUES(?, ?, ?, ?)";
-
+        final String insertSQL = "INSERT INTO " + TABLE_NAME +
+                "(first_name, " +
+                "last_name, " +
+                "email, " +
+                "password)" +
+                " VALUES(?, ?, ?, ?)";
+        try{
             PreparedStatement ps = connection.prepareStatement(insertSQL);
             ps.setString(1, person.getFirstName());
             ps.setString(2, person.getLastName());
@@ -83,11 +84,10 @@ public class PersonDao implements iDao<Person, Integer> {
         return null;
     }
     public Person findByEmail(String email) {
-        Connection connection = null;
-        try{
-            connection = SingleConnectionManager.getConnection();
-                String query = "SELECT * FROM " + TABLE_NAME
-                    + " WHERE email = ?;";
+        final String query = "SELECT * FROM " + TABLE_NAME
+                + " WHERE email = ?";
+        try(Connection connection = dataSource.getConnection())
+        {
             PreparedStatement p_stmt = connection.prepareStatement(query);
             p_stmt.setString(1,email);
             ResultSet rs = p_stmt.executeQuery();
@@ -102,12 +102,6 @@ public class PersonDao implements iDao<Person, Integer> {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                } catch (SQLException ignored) {}
-            }
         }
         return null;
     }
@@ -119,6 +113,7 @@ public class PersonDao implements iDao<Person, Integer> {
                     "email = ?," +
                     "password = ?" +
                     " WHERE id = ?;";
+
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setString(1,person.getFirstName());
         ps.setString(2,person.getLastName());

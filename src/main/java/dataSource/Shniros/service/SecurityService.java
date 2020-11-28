@@ -1,20 +1,22 @@
-package ru.Shniros.service;
+package dataSource.Shniros.service;
 
-import org.springframework.util.DigestUtils;
-import ru.Shniros.DBase.DAO.PersonDao;
-import ru.Shniros.DBase.domain.Person;
-import ru.Shniros.DBase.jdbc.SingleConnectionManager;
-import ru.Shniros.exception.CommonServiceException;
+import dataSource.Shniros.DBase.DAO.DaoFactory;
+import dataSource.Shniros.DBase.DAO.PersonDao;
+import dataSource.Shniros.DBase.domain.Person;
+import dataSource.Shniros.exception.CommonServiceException;
 
-import java.sql.SQLException;
-import java.util.logging.Logger;
+import java.sql.Connection;
 
 public class SecurityService {
-    Person curPerson;
+    private final PersonDao personDao;
+
+    public SecurityService(PersonDao personDao) {
+        this.personDao = personDao;
+    }
 
     public Person login(String email, String password){
-        PersonDao dao = new PersonDao();
-        curPerson = dao.findByEmail(email);
+
+        Person curPerson = personDao.findByEmail(email);
         try {
             if (curPerson != null) {
                 if (DigestService.getHash(password).equals(
@@ -31,10 +33,10 @@ public class SecurityService {
     }
 
     public Person registration(Person person){
-        PersonDao dao = new PersonDao();
-        try {
-            if(dao.findByEmail(person.getEmail()) == null){
-                return dao.insert(person, SingleConnectionManager.getConnection());
+
+        try (Connection connection =  DaoFactory.getDataSource().getConnection()){
+            if(personDao.findByEmail(person.getEmail()) == null){
+                return personDao.insert(person,connection);
 
             }else{
                throw new CommonServiceException(SecurityService.class.getName(),

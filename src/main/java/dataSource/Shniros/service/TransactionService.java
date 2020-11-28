@@ -1,12 +1,11 @@
-package ru.Shniros.service;
+package dataSource.Shniros.service;
 
-import ru.Shniros.DBase.DAO.AccountDao;
-import ru.Shniros.DBase.DAO.TransactionDao;
-import ru.Shniros.DBase.domain.Account;
-import ru.Shniros.DBase.domain.Transaction;
-import ru.Shniros.DBase.domain.TransactionCategory;
-import ru.Shniros.DBase.jdbc.SingleConnectionManager;
-import ru.Shniros.exception.CommonServiceException;
+import dataSource.Shniros.DBase.DAO.AccountDao;
+import dataSource.Shniros.DBase.DAO.DaoFactory;
+import dataSource.Shniros.DBase.DAO.TransactionDao;
+import dataSource.Shniros.DBase.domain.Account;
+import dataSource.Shniros.DBase.domain.Transaction;
+import dataSource.Shniros.exception.CommonServiceException;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -14,14 +13,22 @@ import java.sql.SQLException;
 import java.util.Date;
 
 public class TransactionService {
-    public void CreateTransaction(TransactionCategory category, Long fromAccountId, Long toAccountId, BigDecimal sum){
+    private final AccountDao accountDao;
+    private final TransactionDao transactionDao;
+
+    public TransactionService(AccountDao accountDao, TransactionDao transactionDao) {
+        this.accountDao = accountDao;
+        this.transactionDao = transactionDao;
+    }
+
+    public void CreateTransaction(Integer categoryId, Long fromAccountId, Long toAccountId, BigDecimal sum){
         Connection connection = null;
         try {
-            connection = SingleConnectionManager.getConnection();
+            connection = DaoFactory.getDataSource().getConnection();
             connection.setAutoCommit(false);
-            AccountDao accountDAO = new AccountDao();
-            Account fromAccount = accountDAO.findById(fromAccountId);
-            Account toAccount = accountDAO.findById(toAccountId);
+
+            Account fromAccount = accountDao.findById(fromAccountId);
+            Account toAccount = accountDao.findById(toAccountId);
 
             if(fromAccount == null){
                 throw new CommonServiceException(TransactionService.class.getName(),"Can't find account id:" + fromAccount.getId());
@@ -36,15 +43,15 @@ public class TransactionService {
             }
             fromAccount.setBalance(fromAccountBalance.add(sum.negate()));
             toAccount.setBalance(toAccount.getBalance().add(sum));
-            accountDAO.update(fromAccount,connection);
-            accountDAO.update(toAccount,connection);
+            accountDao.update(fromAccount,connection);
+            accountDao.update(toAccount,connection);
             Transaction transaction = new Transaction();
             transaction.setFromAccountId(fromAccount.getId());
             transaction.setToAccountId(toAccount.getId());
             transaction.setSum(sum);
             transaction.setDate(new Date());
-            transaction.setCategoryId(category.getId());
-            new TransactionDao().insert(transaction,connection);
+            transaction.setCategoryId(categoryId);
+            transactionDao.insert(transaction,connection);
             connection.commit();
 
         } catch (Exception ex) {
