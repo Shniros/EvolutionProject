@@ -3,8 +3,10 @@ package ru.Shniros.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ru.Shniros.DBase.DAO.PersonDao;
-import ru.Shniros.DBase.domain.Person;
+import ru.Shniros.DAL.DAO.PersonDao;
+import ru.Shniros.DAL.DAO.exception.CommonDaoException;
+import ru.Shniros.domain.Person;
+import ru.Shniros.service.exception.CommonServiceException;
 
 import javax.sql.DataSource;
 
@@ -28,14 +30,14 @@ class SecurityServiceTest {
     }
 
     @Test
-    void login_personNotFoundByEmail() {
+    void login_personNotFoundByEmail() throws CommonServiceException, CommonDaoException {
         when(personDao.findByEmail("jobshniros@gmail.com")).thenReturn(null);
         Person person = subj.login("jobshniros@gmail.com","password");
         assertNull(person);
 
     }
     @Test
-    void login_personFoundButPasswordWrong() {
+    void login_personFoundButPasswordWrong() throws CommonDaoException, CommonServiceException {
         Person personService = new Person();
         personService.setPassword("some password");
         when(personDao.findByEmail("jobshniros@gmail.com")).thenReturn(personService);
@@ -45,7 +47,7 @@ class SecurityServiceTest {
     }
 
     @Test
-    void login_ok() {
+    void login_ok() throws CommonDaoException, CommonServiceException {
         Person personService = new Person();
         personService.setId(1);
         personService.setPassword("some_password");

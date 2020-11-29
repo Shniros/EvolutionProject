@@ -1,6 +1,8 @@
-package ru.Shniros.DBase.DAO;
+package ru.Shniros.DAL.DAO;
 
-import ru.Shniros.DBase.domain.Person;
+import ru.Shniros.DAL.DAO.exception.CommonDaoException;
+import ru.Shniros.DAL.iDao;
+import ru.Shniros.domain.Person;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -16,38 +18,38 @@ public class PersonDao implements iDao<Person, Integer> {
     }
 
     @Override
-    public Person findById(Integer id) {
-        String queru = "SELECT * FROM " + TABLE_NAME +
+    public Person findById(Integer id) throws CommonDaoException {
+        Person person = null;
+        String query = "SELECT * FROM " + TABLE_NAME +
                 " WHERE id = ?";
-
-        try (Connection connection = dataSource.getConnection())
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query))
         {
-            PreparedStatement ps = connection.prepareStatement(queru);
             ps.setInt(1,id);
             ResultSet rs = ps.executeQuery();
-            Person person = new Person();
             if(rs.next()){
+                person = new Person();
                 person.setId(rs.getInt("id"));
                 person.setEmail(rs.getString("email"));
                 person.setPassword(rs.getString("password"));
                 person.setFirstName(rs.getString("first_name"));
                 person.setLastName(rs.getString("last_name"));
-                return person;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new CommonDaoException("Cannot find person by id",ex);
         }
-        return null;
+        return person;
     }
 
     @Override
-    public List<Person> findByAll() {
+    public List<Person> findByAll() throws CommonDaoException {
+        List<Person> people = null;
         final String query = "SELECT * FROM " + TABLE_NAME;
-        try (Connection connection = dataSource.getConnection())
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query))
         {
-            PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-            List<Person> people = new ArrayList<Person>();
+            people = new ArrayList<Person>();
             while (rs.next()){
                 people.add(new Person().setId(rs.getInt("id"))
                         .setEmail(rs.getString("email"))
@@ -55,58 +57,55 @@ public class PersonDao implements iDao<Person, Integer> {
                         .setFirstName(rs.getString("first_name"))
                         .setLastName(rs.getString("last_name")));
             }
-            return people;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new CommonDaoException("Cannot find all people",ex);
         }
-        return null;
+        return people;
     }
 
     @Override
-    public Person insert(Person person, Connection connection){
+    public Person insert(Person person, Connection connection) throws CommonDaoException {
         final String insertSQL = "INSERT INTO " + TABLE_NAME +
                 "(first_name, " +
                 "last_name, " +
                 "email, " +
                 "password)" +
                 " VALUES(?, ?, ?, ?)";
-        try{
-            PreparedStatement ps = connection.prepareStatement(insertSQL);
+        try(PreparedStatement ps = connection.prepareStatement(insertSQL)){
             ps.setString(1, person.getFirstName());
             ps.setString(2, person.getLastName());
             ps.setString(3, person.getEmail());
             ps.setString(4, person.getPassword());
             ps.executeUpdate();
-            return person;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+           throw new CommonDaoException("Cannot insert person",ex);
         }
-        return null;
+        return person;
     }
-    public Person findByEmail(String email) {
+    public Person findByEmail(String email) throws CommonDaoException {
+        Person findPerson = null;
         final String query = "SELECT * FROM " + TABLE_NAME
                 + " WHERE email = ?";
-        try(Connection connection = dataSource.getConnection())
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query))
         {
-            PreparedStatement p_stmt = connection.prepareStatement(query);
-            p_stmt.setString(1,email);
-            ResultSet rs = p_stmt.executeQuery();
+            ps.setString(1,email);
+            ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                Person findPerson = new Person();
+                findPerson = new Person();
                 findPerson.setId(rs.getInt("id"));
                 findPerson.setFirstName(rs.getString("first_name"));
                 findPerson.setLastName(rs.getString("last_name"));
                 findPerson.setEmail(rs.getString("email"));
                 findPerson.setPassword(rs.getString("password"));
-                return findPerson;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new CommonDaoException("Cannot find person by e-mail",ex);
         }
-        return null;
+        return findPerson;
     }
     @Override
-    public Person update(Person person, Connection connection) throws SQLException {
+    public Person update(Person person, Connection connection) throws CommonDaoException {
         String query = "UPDATE " + TABLE_NAME +
                     " SET first_name = ?," +
                     "last_name = ?," +
@@ -114,13 +113,16 @@ public class PersonDao implements iDao<Person, Integer> {
                     "password = ?" +
                     " WHERE id = ?;";
 
-        PreparedStatement ps = connection.prepareStatement(query);
-        ps.setString(1,person.getFirstName());
-        ps.setString(2,person.getLastName());
-        ps.setString(3,person.getEmail());
-        ps.setString(4,person.getPassword());
-        ps.setInt(5,person.getId());
-        ps.execute();
+        try(PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, person.getFirstName());
+            ps.setString(2, person.getLastName());
+            ps.setString(3, person.getEmail());
+            ps.setString(4, person.getPassword());
+            ps.setInt(5, person.getId());
+            ps.execute();
+        }catch (SQLException ex){
+            throw new CommonDaoException("Cannot update person data",ex);
+        }
         return person;
     }
 

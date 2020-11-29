@@ -1,4 +1,4 @@
-package ru.Shniros.DBase.DAO;
+package ru.Shniros.DAL.DAO;
 
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -12,7 +12,7 @@ public class DaoFactory {
     private static TransactionCategoryDao transactionCategoryDao;
     private static DataSource dataSource;
 
-    public static DataSource getDataSource() throws SQLException {
+    public static DataSource getDataSource(){
         final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
         final String username = "postgres";
         final String password = "12345";
@@ -26,26 +26,26 @@ public class DaoFactory {
         return dataSource;
     }
 
-    public static AccountDao getAccountDao() throws SQLException {
+    public static AccountDao getAccountDao(){
         if(accountDao == null){
             accountDao = new AccountDao(getDataSource());
         }
         return accountDao;
     }
 
-    public static PersonDao getPersonDao() throws SQLException {
+    public static PersonDao getPersonDao(){
         if(personDao == null){
             personDao = new PersonDao(getDataSource());
         }
         return personDao;
     }
-    public static TransactionDao getTransactionDao() throws SQLException {
+    public static TransactionDao getTransactionDao(){
         if(transactionDao == null){
             transactionDao = new TransactionDao(getDataSource());
         }
         return transactionDao;
     }
-    public static TransactionCategoryDao getTransactionCategoryDao() throws SQLException {
+    public static TransactionCategoryDao getTransactionCategoryDao(){
         if(transactionCategoryDao == null){
             transactionCategoryDao = new TransactionCategoryDao(getDataSource());
         }

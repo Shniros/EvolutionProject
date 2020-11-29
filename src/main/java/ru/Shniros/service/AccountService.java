@@ -1,9 +1,14 @@
 package ru.Shniros.service;
 
-import ru.Shniros.DBase.DAO.AccountDao;
-import ru.Shniros.DBase.domain.Account;
-import ru.Shniros.DBase.domain.Person;
-import ru.Shniros.exception.CommonServiceException;
+import ru.Shniros.DAL.DAO.AccountDao;
+import ru.Shniros.DAL.DAO.exception.CommonDaoException;
+import ru.Shniros.domain.Account;
+import ru.Shniros.domain.Person;
+import ru.Shniros.service.exception.CommonServiceException;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 
 public class AccountService {
@@ -15,19 +20,16 @@ public class AccountService {
         this.dataSource = dataSource;
     }
 
-    public Account CreateAccount(Account account, Person person){
-        try {
+    public Account CreateAccount(Account account, Person person) throws CommonServiceException {
+        try (Connection connection = dataSource.getConnection()){
             if(accountDao.countAccountByPersonId(person.getId()) < 5){
-                accountDao.insert(account, dataSource.getConnection());
-                return account;
+                accountDao.insert(account, connection);
             }else{
-                throw new CommonServiceException(AccountService.class.getName(),"user have 5 accounts");
+                throw new CommonServiceException("user have 5 accounts");
             }
-        }catch (SQLException ex) {
-            ex.printStackTrace();
-        }catch (CommonServiceException cse){
-            cse.printStackTrace();
+        }catch (CommonDaoException | SQLException ex){
+            throw new CommonServiceException("Cannot create account",ex);
         }
-        return null;
+        return account;
     }
 }

@@ -1,11 +1,11 @@
 package ru.Shniros.service;
 
-import ru.Shniros.DBase.DAO.AccountDao;
-import ru.Shniros.DBase.DAO.DaoFactory;
-import ru.Shniros.DBase.DAO.TransactionDao;
-import ru.Shniros.DBase.domain.Account;
-import ru.Shniros.DBase.domain.Transaction;
-import ru.Shniros.exception.CommonServiceException;
+import ru.Shniros.DAL.DAO.AccountDao;
+import ru.Shniros.DAL.DAO.TransactionDao;
+import ru.Shniros.DAL.DAO.exception.CommonDaoException;
+import ru.Shniros.domain.Account;
+import ru.Shniros.domain.Transaction;
+import ru.Shniros.service.exception.CommonServiceException;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -24,25 +24,22 @@ public class TransactionService {
         this.dataSource = dataSource;
     }
 
-    public void CreateTransaction(Integer categoryId, Long fromAccountId, Long toAccountId, BigDecimal sum){
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
+    public void CreateTransaction(Integer categoryId, Long fromAccountId, Long toAccountId, BigDecimal sum) throws CommonServiceException {
+        try (Connection connection = dataSource.getConnection()){
             connection.setAutoCommit(false);
 
             Account fromAccount = accountDao.findById(fromAccountId);
             Account toAccount = accountDao.findById(toAccountId);
 
             if(fromAccount == null){
-                throw new CommonServiceException(TransactionService.class.getName(),"Can't find account id:" + fromAccount.getId());
+                throw new CommonServiceException("Can't find account id:" + fromAccount.getId());
             }
             if(toAccount == null){
-                throw new CommonServiceException(TransactionService.class.getName(),"Can't find account id:" + toAccount.getId());
+                throw new CommonServiceException("Can't find account id:" + toAccount.getId());
             }
             BigDecimal fromAccountBalance = fromAccount.getBalance();
             if(fromAccountBalance.compareTo(sum) < 0){
-                throw new CommonServiceException(TransactionService.class.getName(),
-                        "Insufficient funds in the account:" + fromAccountBalance.add(sum.negate()));
+                throw new CommonServiceException("Insufficient funds in the account:" + fromAccountBalance.add(sum.negate()));
             }
             fromAccount.setBalance(fromAccountBalance.add(sum.negate()));
             toAccount.setBalance(toAccount.getBalance().add(sum));
@@ -57,19 +54,8 @@ public class TransactionService {
             transactionDao.insert(transaction,connection);
             connection.commit();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            if(connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ignored) {}
-            }
-        }finally {
-            if(connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException ignored) {}
-            }
+        } catch (CommonDaoException | SQLException ex) {
+           throw new CommonServiceException("Cannot create transaction",ex);
         }
 
     }

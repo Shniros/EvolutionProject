@@ -1,6 +1,8 @@
-package ru.Shniros.DBase.DAO;
+package ru.Shniros.DAL.DAO;
 
-import ru.Shniros.DBase.domain.Transaction;
+import ru.Shniros.DAL.DAO.exception.CommonDaoException;
+import ru.Shniros.DAL.iDao;
+import ru.Shniros.domain.Transaction;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,16 +16,17 @@ public class TransactionDao implements iDao<Transaction,Long> {
         this.dataSource = dataSource;
     }
     @Override
-    public Transaction findById(Long id) {
+    public Transaction findById(Long id) throws CommonDaoException {
+        Transaction transaction = null;
         final String query = "SELECT * FROM " + TABLE_NAME +
                 " WHERE id = ?";
-        try(Connection connection = dataSource.getConnection())
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query))
         {
-            PreparedStatement ps = connection.prepareStatement(query);
             ps.setLong(1,id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                Transaction transaction = new Transaction();
+                transaction = new Transaction();
                 transaction.setId(rs.getInt("id"));
                 transaction.setDate(rs.getDate("date"));
                 transaction.setFromAccountId(rs.getLong("from_account_id"));
@@ -31,22 +34,22 @@ public class TransactionDao implements iDao<Transaction,Long> {
                 transaction.setSum(rs.getBigDecimal("sum"));
                 transaction.setComment(rs.getString("comment"));
                 transaction.setCategoryId(rs.getInt("category_id"));
-                return transaction;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new CommonDaoException("Cannot find transaction by id",ex);
         }
-        return null;
+        return transaction;
     }
 
     @Override
-    public List<Transaction> findByAll() {
+    public List<Transaction> findByAll() throws CommonDaoException {
+        List<Transaction> list = null;
         final String query = "SELECT * FROM " + TABLE_NAME;
-        try (Connection connection = dataSource.getConnection())
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query))
         {
-            PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-            List<Transaction> list = new ArrayList<Transaction>();
+            list = new ArrayList<Transaction>();
             while(rs.next()){
                 list.add(new Transaction().setId(rs.getInt("id"))
                                 .setDate(rs.getDate("date"))
@@ -56,15 +59,14 @@ public class TransactionDao implements iDao<Transaction,Long> {
                                 .setComment(rs.getString("comment"))
                                 .setCategoryId(rs.getInt("category_id")));
             }
-            return list;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new CommonDaoException("Cannot find all transaction",ex);
         }
-        return null;
+        return list;
     }
 
     @Override
-    public Transaction insert(Transaction transaction, Connection connection) throws SQLException {
+    public Transaction insert(Transaction transaction, Connection connection) throws CommonDaoException {
         final String query =  "INSERT INTO " + TABLE_NAME +
                 "(date," +
                 "comment," +
@@ -73,19 +75,22 @@ public class TransactionDao implements iDao<Transaction,Long> {
                 "sum," +
                 "category_id)" +
                 " VALUES (?,?,?,?,?,?)";
-        PreparedStatement ps = connection.prepareStatement(query);
-        ps.setTimestamp(1,new Timestamp(transaction.getDate().getTime()));
-        ps.setString(2,transaction.getComment());
-        ps.setLong(3,transaction.getFromAccountId());
-        ps.setLong(4,transaction.getToAccountId());
-        ps.setBigDecimal(5,transaction.getSum());
-        ps.setInt(6,transaction.getCategoryId());
-        ps.execute();
+        try(PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setTimestamp(1, new Timestamp(transaction.getDate().getTime()));
+            ps.setString(2, transaction.getComment());
+            ps.setLong(3, transaction.getFromAccountId());
+            ps.setLong(4, transaction.getToAccountId());
+            ps.setBigDecimal(5, transaction.getSum());
+            ps.setInt(6, transaction.getCategoryId());
+            ps.execute();
+        }catch (SQLException ex){
+            throw new CommonDaoException("Cannot insert transaction",ex);
+        }
         return transaction;
     }
 
     @Override
-    public Transaction update(Transaction transaction, Connection connection) throws SQLException {
+    public Transaction update(Transaction transaction, Connection connection) throws CommonDaoException {
         final String query = "UPDATE " + TABLE_NAME +
                 " SET date = ?," +
                 "comment = ?," +
@@ -94,15 +99,18 @@ public class TransactionDao implements iDao<Transaction,Long> {
                 "sum = ?" +
                 "category_id = ?" +
                 " WHERE id = ?";
-        PreparedStatement ps = connection.prepareStatement(query);
-        ps.setTimestamp(1,new Timestamp(transaction.getDate().getTime()));
-        ps.setString(2,transaction.getComment());
-        ps.setLong(3,transaction.getFromAccountId());
-        ps.setLong(4,transaction.getToAccountId());
-        ps.setBigDecimal(5,transaction.getSum());
-        ps.setInt(6,transaction.getCategoryId());
-        ps.setLong(7,transaction.getId());
-        ps.execute();
+        try(PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setTimestamp(1, new Timestamp(transaction.getDate().getTime()));
+            ps.setString(2, transaction.getComment());
+            ps.setLong(3, transaction.getFromAccountId());
+            ps.setLong(4, transaction.getToAccountId());
+            ps.setBigDecimal(5, transaction.getSum());
+            ps.setInt(6, transaction.getCategoryId());
+            ps.setLong(7, transaction.getId());
+            ps.execute();
+        }catch (SQLException ex){
+            throw new CommonDaoException("Cannot update transaction",ex);
+        }
         return transaction;
     }
 
