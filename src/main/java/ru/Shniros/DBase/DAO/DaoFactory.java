@@ -1,4 +1,4 @@
-package ru.Shniros.DAL.DAO;
+package ru.Shniros.DBase.DAO;
 
 import com.zaxxer.hikari.HikariDataSource;
 

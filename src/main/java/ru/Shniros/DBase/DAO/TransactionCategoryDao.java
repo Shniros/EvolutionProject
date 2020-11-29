@@ -1,6 +1,6 @@
-package ru.Shniros.DAL.DAO;
+package ru.Shniros.DBase.DAO;
 
-import ru.Shniros.DAL.domain.TransactionCategory;
+import ru.Shniros.DBase.domain.TransactionCategory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
