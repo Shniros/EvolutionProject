@@ -1,8 +1,7 @@
 package ru.Shniros.service;
 
-import ru.Shniros.DBase.DAO.DaoFactory;
-import ru.Shniros.DBase.DAO.PersonDao;
-import ru.Shniros.DBase.domain.Person;
+import ru.Shniros.DAL.DAO.PersonDao;
+import ru.Shniros.DAL.domain.Person;
 import ru.Shniros.exception.CommonServiceException;
 
 import javax.sql.DataSource;

@@ -1,6 +1,6 @@
-package ru.Shniros.DBase.DAO;
+package ru.Shniros.DAL.DAO;
 
-import ru.Shniros.DBase.domain.Person;
+import ru.Shniros.DAL.domain.Person;
 
 import javax.sql.DataSource;
 import java.sql.*;

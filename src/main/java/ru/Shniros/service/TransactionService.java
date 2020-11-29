@@ -1,10 +1,9 @@
 package ru.Shniros.service;
 
-import ru.Shniros.DBase.DAO.AccountDao;
-import ru.Shniros.DBase.DAO.DaoFactory;
-import ru.Shniros.DBase.DAO.TransactionDao;
-import ru.Shniros.DBase.domain.Account;
-import ru.Shniros.DBase.domain.Transaction;
+import ru.Shniros.DAL.DAO.AccountDao;
+import ru.Shniros.DAL.DAO.TransactionDao;
+import ru.Shniros.DAL.domain.Account;
+import ru.Shniros.DAL.domain.Transaction;
 import ru.Shniros.exception.CommonServiceException;
 
 import javax.sql.DataSource;

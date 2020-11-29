@@ -1,6 +1,6 @@
 package ru.Shniros.service;
 
-import ru.Shniros.DBase.DAO.DaoFactory;
+import ru.Shniros.DAL.DAO.DaoFactory;
 
 import java.sql.SQLException;
 
