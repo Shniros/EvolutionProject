@@ -1,7 +1,6 @@
 package ru.Shniros.service;
 
 import ru.Shniros.DBase.DAO.AccountDao;
-import ru.Shniros.DBase.DAO.DaoFactory;
 import ru.Shniros.DBase.domain.Account;
 import ru.Shniros.DBase.domain.Person;
 import ru.Shniros.exception.CommonServiceException;
