@@ -9,8 +9,9 @@ import java.sql.SQLException;
 
 public class Demo {
     public static void main(String[] args) throws CommonDaoException {
-        TransactionService ts = ServiceFactory.getTransactionService();
+      //  TransactionService ts = ServiceFactory.getTransactionService();
         //ts.CreateTransaction(1,2L,3L, BigDecimal.valueOf(150))
-        System.out.println(DaoFactory.getTransactionDao().findByAll());
+       // System.out.println(DaoFactory.getTransactionDao().findByAll());
+        System.out.println("Hello world");
     }
 }

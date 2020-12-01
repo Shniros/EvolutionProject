@@ -25,7 +25,9 @@ public class TransactionService {
     }
 
     public void CreateTransaction(Integer categoryId, Long fromAccountId, Long toAccountId, BigDecimal sum) throws CommonServiceException {
-        try (Connection connection = dataSource.getConnection()){
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
 
             Account fromAccount = accountDao.findById(fromAccountId);
@@ -55,7 +57,18 @@ public class TransactionService {
             connection.commit();
 
         } catch (CommonDaoException | SQLException ex) {
-           throw new CommonServiceException("Cannot create transaction",ex);
+            if(connection != null){
+                try {
+                     connection.rollback();
+                    } catch (SQLException ignored) { }
+            }
+            throw new CommonServiceException("Cannot create transaction",ex);
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ignored) {}
+            }
         }
 
     }

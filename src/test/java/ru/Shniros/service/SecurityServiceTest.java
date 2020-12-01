@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.Shniros.DAL.DAO.PersonDao;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
 import ru.Shniros.domain.Person;
+import ru.Shniros.service.dto.PersonDto;
 import ru.Shniros.service.exception.CommonServiceException;
 
 import javax.sql.DataSource;
@@ -32,8 +33,8 @@ class SecurityServiceTest {
     @Test
     void login_personNotFoundByEmail() throws CommonServiceException, CommonDaoException {
         when(personDao.findByEmail("jobshniros@gmail.com")).thenReturn(null);
-        Person person = subj.login("jobshniros@gmail.com","password");
-        assertNull(person);
+        PersonDto dto = subj.login("jobshniros@gmail.com","password");
+        assertNull(dto);
 
     }
     @Test
@@ -42,8 +43,8 @@ class SecurityServiceTest {
         personService.setPassword("some password");
         when(personDao.findByEmail("jobshniros@gmail.com")).thenReturn(personService);
         when(digestService.getHash("password")).thenReturn("other password");
-        Person person = subj.login("jobshniros@gmail.com","password");
-        assertNull(person);
+        PersonDto dto = subj.login("jobshniros@gmail.com","password");
+        assertNull(dto);
     }
 
     @Test
@@ -54,7 +55,7 @@ class SecurityServiceTest {
         when(personDao.findByEmail("jobshniros@gmail.com")).thenReturn(personService);
         when(digestService.getHash("password")).thenReturn("some_password");
 
-        Person person = subj.login("jobshniros@gmail.com","password");
-        assertEquals(person,personService);
+        PersonDto dto = subj.login("jobshniros@gmail.com","password");
+        assertEquals(dto,personService);
     }
 }

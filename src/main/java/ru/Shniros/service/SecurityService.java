@@ -2,7 +2,9 @@ package ru.Shniros.service;
 
 import ru.Shniros.DAL.DAO.PersonDao;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
+import ru.Shniros.converter.PersonToPersonDto;
 import ru.Shniros.domain.Person;
+import ru.Shniros.service.dto.PersonDto;
 import ru.Shniros.service.exception.CommonServiceException;
 
 import javax.sql.DataSource;
@@ -19,13 +21,13 @@ public class SecurityService {
         this.dataSource = dataSource;
     }
 
-    public Person login(String email, String password) throws CommonServiceException {
-        Person curPerson = null;
+    public PersonDto login(String email, String password) throws CommonServiceException {
         try {
-            curPerson = personDao.findByEmail(email);
+            Person curPerson = personDao.findByEmail(email);
             if (curPerson != null) {
                 if (digestService.getHash(password).equals(
                         curPerson.getPassword())) {
+                    return new PersonToPersonDto().convert(curPerson);
                 } else {
                     throw new CommonServiceException("Wrong password");
                 }
@@ -35,10 +37,9 @@ public class SecurityService {
         }catch (CommonDaoException daoEx){
             throw new CommonServiceException("Cannot login person",daoEx);
         }
-        return curPerson;
     }
 
-    public Person registration(Person person) throws CommonServiceException {
+    public PersonDto registration(Person person) throws CommonServiceException {
         try (Connection connection =  dataSource.getConnection()){
             if(personDao.findByEmail(person.getEmail()) == null){
                 personDao.insert(person,connection);
@@ -48,6 +49,6 @@ public class SecurityService {
         } catch (CommonDaoException | SQLException ex) {
             throw new CommonServiceException("Cannot registration person",ex);
         }
-        return person;
+        return new PersonToPersonDto().convert(person);
     }
 }
