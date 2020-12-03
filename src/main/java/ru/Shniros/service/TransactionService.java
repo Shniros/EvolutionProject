@@ -59,17 +59,16 @@ public class TransactionService {
         } catch (CommonDaoException | SQLException ex) {
             if(connection != null){
                 try {
-                     connection.rollback();
-                    } catch (SQLException ignored) { }
+                    connection.rollback();
+                } catch (SQLException ignored) {}
             }
-            throw new CommonServiceException("Cannot create transaction",ex);
+           throw new CommonServiceException("Cannot create transaction",ex);
         }finally {
-            if(connection != null){
+            if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException ignored) {}
             }
         }
-
     }
 }

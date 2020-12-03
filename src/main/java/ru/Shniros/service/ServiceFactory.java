@@ -1,8 +1,8 @@
 package ru.Shniros.service;
 
 import ru.Shniros.DAL.DAO.DaoFactory;
-
-import java.sql.SQLException;
+import ru.Shniros.converter.AccountToAccountDto;
+import ru.Shniros.converter.PersonToPersonDto;
 
 public class ServiceFactory {
     private static AccountService accountService;
@@ -19,13 +19,18 @@ public class ServiceFactory {
     }
     public static AccountService getAccountService(){
         if(accountService == null){
-            accountService = new AccountService(DaoFactory.getAccountDao(), DaoFactory.getDataSource());
+            accountService = new AccountService(DaoFactory.getAccountDao(),
+                    DaoFactory.getDataSource(),
+                    new AccountToAccountDto());
         }
         return accountService;
     }
     public static SecurityService getSecurityService(){
         if(securityService == null){
-            securityService = new SecurityService(DaoFactory.getPersonDao(), getDigestService(), DaoFactory.getDataSource());
+            securityService = new SecurityService(DaoFactory.getPersonDao(),
+                    getDigestService(),
+                    DaoFactory.getDataSource(),
+                    new PersonToPersonDto());
         }
         return securityService;
     }

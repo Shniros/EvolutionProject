@@ -36,7 +36,7 @@ public class AccountDao implements iDao<Account, Long> {
                 accounts.add(new Account().setId(rs.getInt("id"))
                         .setName(rs.getString("balance"))
                         .setBalance(rs.getBigDecimal("balance"))
-                        .setPirsonId(rs.getInt("person_id")));
+                        .setPersonId(rs.getInt("person_id")));
             }
         } catch (SQLException ex) {
             throw new CommonDaoException("Cannot find all by person_id",ex);
@@ -56,7 +56,7 @@ public class AccountDao implements iDao<Account, Long> {
                 accounts.add(new Account().setId(rs.getInt("id"))
                         .setName(rs.getString("balance"))
                         .setBalance(rs.getBigDecimal("balance"))
-                        .setPirsonId(rs.getInt("person_id")));
+                        .setPersonId(rs.getInt("person_id")));
             }
         } catch (SQLException ex) {
             throw new CommonDaoException("Cannot find all accounts",ex);
@@ -79,7 +79,7 @@ public class AccountDao implements iDao<Account, Long> {
                 account.setId(rs.getInt("id"));
                 account.setName(rs.getString("name"));
                 account.setBalance(rs.getBigDecimal("balance"));
-                account.setPirsonId(rs.getInt("person_id"));
+                account.setPersonId(rs.getInt("person_id"));
             }
         } catch (SQLException ex) {
             throw new CommonDaoException("Cannot find by id",ex);
@@ -95,7 +95,7 @@ public class AccountDao implements iDao<Account, Long> {
         try(PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account.getName());
             ps.setBigDecimal(2, account.getBalance());
-            ps.setInt(3, account.getPirsonId());
+            ps.setInt(3, account.getPersonId());
             ps.execute();
         }catch (SQLException ex){
             throw new CommonDaoException("Cannot insert account",ex);
