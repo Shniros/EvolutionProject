@@ -3,6 +3,7 @@ package ru.Shniros.service;
 import ru.Shniros.DAL.DAO.DaoFactory;
 import ru.Shniros.converter.AccountToAccountDto;
 import ru.Shniros.converter.PersonToPersonDto;
+import ru.Shniros.converter.TransactionToTransactionDto;
 
 public class ServiceFactory {
     private static AccountService accountService;
@@ -13,7 +14,9 @@ public class ServiceFactory {
     public static TransactionService getTransactionService(){
         if(transactionService == null){
             transactionService = new TransactionService(DaoFactory.getAccountDao(),
-                    DaoFactory.getTransactionDao(), DaoFactory.getDataSource());
+                    DaoFactory.getTransactionDao(),
+                    DaoFactory.getDataSource(),
+                    new TransactionToTransactionDto());
         }
         return transactionService;
     }

@@ -3,8 +3,10 @@ package ru.Shniros.service;
 import ru.Shniros.DAL.DAO.AccountDao;
 import ru.Shniros.DAL.DAO.TransactionDao;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
+import ru.Shniros.converter.TransactionToTransactionDto;
 import ru.Shniros.domain.Account;
 import ru.Shniros.domain.Transaction;
+import ru.Shniros.service.dto.TransactionDto;
 import ru.Shniros.service.exception.CommonServiceException;
 
 import javax.sql.DataSource;
@@ -17,14 +19,16 @@ public class TransactionService {
     private final AccountDao accountDao;
     private final TransactionDao transactionDao;
     private final DataSource dataSource;
+    private final TransactionToTransactionDto converter;
 
-    public TransactionService(AccountDao accountDao, TransactionDao transactionDao, DataSource dataSource) {
+    public TransactionService(AccountDao accountDao, TransactionDao transactionDao, DataSource dataSource, TransactionToTransactionDto converter) {
         this.accountDao = accountDao;
         this.transactionDao = transactionDao;
         this.dataSource = dataSource;
+        this.converter = converter;
     }
 
-    public void CreateTransaction(Integer categoryId, Long fromAccountId, Long toAccountId, BigDecimal sum) throws CommonServiceException {
+    public TransactionDto CreateTransaction(Integer categoryId, Long fromAccountId, Long toAccountId, BigDecimal sum) throws CommonServiceException {
         Connection connection = null;
         try {
             connection = dataSource.getConnection();
@@ -55,6 +59,7 @@ public class TransactionService {
             transaction.setCategoryId(categoryId);
             transactionDao.insert(transaction,connection);
             connection.commit();
+            return converter.convert(transaction);
 
         } catch (CommonDaoException | SQLException ex) {
             if(connection != null){
