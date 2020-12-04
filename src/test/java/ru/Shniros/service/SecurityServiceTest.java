@@ -45,7 +45,7 @@ class SecurityServiceTest {
         Person personService = new Person();
         personService.setPassword("some password");
         when(personDao.findByEmail("jobshniros@gmail.com")).thenReturn(personService);
-        when(digestService.getHash("password")).thenReturn("other password");
+        when(digestService.getMd5("password")).thenReturn("other password");
         PersonDto dto = subj.login("jobshniros@gmail.com","password");
         assertNull(dto);
     }
@@ -57,7 +57,7 @@ class SecurityServiceTest {
         Person person = new Person();
         person.setPassword("some password");
         when(personDao.findByEmail("jobshniros@gmail.com")).thenReturn(person);
-        when(digestService.getHash("password")).thenReturn("some password");
+        when(digestService.getMd5("password")).thenReturn("some password");
         when(converter.convert(person)).thenReturn(dto);
 
         PersonDto testDto = subj.login("jobshniros@gmail.com","password");

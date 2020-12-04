@@ -27,7 +27,7 @@ public class SecurityService {
         try {
             Person curPerson = personDao.findByEmail(email);
             if (curPerson != null) {
-                if (digestService.getHash(password).equals(curPerson.getPassword())) {
+                if (digestService.getMd5(password).equals(curPerson.getPassword())) {
                     return converter.convert(curPerson);
                 }
             }
