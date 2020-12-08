@@ -9,7 +9,7 @@ import java.util.List;
 public interface iDao <DOMAIN, ID> {
     DOMAIN findById(ID id) throws CommonDaoException;
     List<DOMAIN> findByAll() throws CommonDaoException;
-    DOMAIN insert(DOMAIN domain, Connection connection) throws SQLException, CommonDaoException;
-    DOMAIN update(DOMAIN domain, Connection connection) throws SQLException, CommonDaoException;
+    DOMAIN insert(DOMAIN domain) throws CommonDaoException;
+    DOMAIN update(DOMAIN domain) throws CommonDaoException;
     boolean delete(ID id, Connection connection);
 }

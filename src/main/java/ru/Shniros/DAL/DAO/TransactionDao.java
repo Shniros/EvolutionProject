@@ -66,7 +66,7 @@ public class TransactionDao implements iDao<Transaction,Long> {
     }
 
     @Override
-    public Transaction insert(Transaction transaction, Connection connection) throws CommonDaoException {
+    public Transaction insert(Transaction transaction) throws CommonDaoException {
         final String query =  "INSERT INTO " + TABLE_NAME +
                 "(date," +
                 "comment," +
@@ -75,7 +75,9 @@ public class TransactionDao implements iDao<Transaction,Long> {
                 "sum," +
                 "category_id)" +
                 " VALUES (?,?,?,?,?,?)";
-        try(PreparedStatement ps = connection.prepareStatement(query)) {
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query))
+        {
             ps.setTimestamp(1, new Timestamp(transaction.getDate().getTime()));
             ps.setString(2, transaction.getComment());
             ps.setLong(3, transaction.getFromAccountId());
@@ -90,7 +92,7 @@ public class TransactionDao implements iDao<Transaction,Long> {
     }
 
     @Override
-    public Transaction update(Transaction transaction, Connection connection) throws CommonDaoException {
+    public Transaction update(Transaction transaction) throws CommonDaoException {
         final String query = "UPDATE " + TABLE_NAME +
                 " SET date = ?," +
                 "comment = ?," +
@@ -99,7 +101,9 @@ public class TransactionDao implements iDao<Transaction,Long> {
                 "sum = ?" +
                 "category_id = ?" +
                 " WHERE id = ?";
-        try(PreparedStatement ps = connection.prepareStatement(query)) {
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query))
+        {
             ps.setTimestamp(1, new Timestamp(transaction.getDate().getTime()));
             ps.setString(2, transaction.getComment());
             ps.setLong(3, transaction.getFromAccountId());
@@ -111,6 +115,49 @@ public class TransactionDao implements iDao<Transaction,Long> {
         }catch (SQLException ex){
             throw new CommonDaoException("Cannot update transaction",ex);
         }
+        return transaction;
+    }
+
+    public Transaction insert(Transaction transaction, Connection connection) throws SQLException {
+        final String query =  "INSERT INTO " + TABLE_NAME +
+                "(date," +
+                "comment," +
+                "from_account_id," +
+                "to_account_id," +
+                "sum," +
+                "category_id)" +
+                " VALUES (?,?,?,?,?,?)";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setTimestamp(1, new Timestamp(transaction.getDate().getTime()));
+        ps.setString(2, transaction.getComment());
+        ps.setLong(3, transaction.getFromAccountId());
+        ps.setLong(4, transaction.getToAccountId());
+        ps.setBigDecimal(5, transaction.getSum());
+        ps.setInt(6, transaction.getCategoryId());
+        ps.execute();
+
+        return transaction;
+    }
+
+    public Transaction update(Transaction transaction, Connection connection) throws SQLException {
+        final String query = "UPDATE " + TABLE_NAME +
+                " SET date = ?," +
+                "comment = ?," +
+                "from_account_id = ?," +
+                "to_account_id = ?" +
+                "sum = ?" +
+                "category_id = ?" +
+                " WHERE id = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setTimestamp(1, new Timestamp(transaction.getDate().getTime()));
+        ps.setString(2, transaction.getComment());
+        ps.setLong(3, transaction.getFromAccountId());
+        ps.setLong(4, transaction.getToAccountId());
+        ps.setBigDecimal(5, transaction.getSum());
+        ps.setInt(6, transaction.getCategoryId());
+        ps.setLong(7, transaction.getId());
+        ps.execute();
+
         return transaction;
     }
 

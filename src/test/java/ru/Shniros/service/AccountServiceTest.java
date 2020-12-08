@@ -1,6 +1,7 @@
 package ru.Shniros.service;
 
 import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
 import ru.Shniros.DAL.DAO.AccountDao;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class AccountServiceTest {
-    AccountService subj;
+    private AccountService subj;
     private AccountDao accountDao;
     private DataSource dataSource;
     private AccountToAccountDto converter;

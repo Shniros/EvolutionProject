@@ -38,12 +38,12 @@ public class SecurityService {
     }
 
     public PersonDto registration(Person person) throws CommonServiceException {
-        try (Connection connection =  dataSource.getConnection()){
+        try{
             if(personDao.findByEmail(person.getEmail()) == null){
-                personDao.insert(person,connection);
+                personDao.insert(person);
                 return converter.convert(person);
             }
-        } catch (CommonDaoException | SQLException ex) {
+        } catch (CommonDaoException ex) {
             throw new CommonServiceException("Cannot registration person",ex);
         }
         return null;

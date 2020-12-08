@@ -64,14 +64,16 @@ public class PersonDao implements iDao<Person, Integer> {
     }
 
     @Override
-    public Person insert(Person person, Connection connection) throws CommonDaoException {
+    public Person insert(Person person) throws CommonDaoException {
         final String insertSQL = "INSERT INTO " + TABLE_NAME +
                 "(first_name, " +
                 "last_name, " +
                 "email, " +
                 "password)" +
                 " VALUES(?, ?, ?, ?)";
-        try(PreparedStatement ps = connection.prepareStatement(insertSQL)){
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement ps = connection.prepareStatement(insertSQL))
+        {
             ps.setString(1, person.getFirstName());
             ps.setString(2, person.getLastName());
             ps.setString(3, person.getEmail());
@@ -105,7 +107,7 @@ public class PersonDao implements iDao<Person, Integer> {
         return findPerson;
     }
     @Override
-    public Person update(Person person, Connection connection) throws CommonDaoException {
+    public Person update(Person person) throws CommonDaoException {
         String query = "UPDATE " + TABLE_NAME +
                     " SET first_name = ?," +
                     "last_name = ?," +
@@ -113,7 +115,9 @@ public class PersonDao implements iDao<Person, Integer> {
                     "password = ?" +
                     " WHERE id = ?;";
 
-        try(PreparedStatement ps = connection.prepareStatement(query)) {
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query))
+        {
             ps.setString(1, person.getFirstName());
             ps.setString(2, person.getLastName());
             ps.setString(3, person.getEmail());

@@ -1,6 +1,16 @@
 package ru.Shniros.DAL.DAO;
 
 import com.zaxxer.hikari.HikariDataSource;
+import liquibase.Contexts;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseConnection;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
+import ru.Shniros.DAL.DAO.exception.CommonDaoException;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -18,12 +28,29 @@ public class DaoFactory {
         final String password = "12345";
         if(dataSource == null){
             HikariDataSource ds = new HikariDataSource();
-            ds.setJdbcUrl(DB_URL);
-            ds.setUsername(username);
-            ds.setPassword(password);
+            ds.setJdbcUrl(System.getProperty("jdbcURL",DB_URL));
+            ds.setUsername(System.getProperty("jdbcUsername",username));
+            ds.setPassword(System.getProperty("jdbcPassword"  ,password));
             dataSource = ds;
+            initDataBase();
         }
         return dataSource;
+    }
+
+    private static void initDataBase(){
+        try {
+            DatabaseConnection connection = new JdbcConnection(dataSource.getConnection());
+            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(connection);
+            Liquibase liquibase = new Liquibase(
+                    "liquibase.xml",
+                    new ClassLoaderResourceAccessor(),
+                    database
+            );
+            liquibase.update(new Contexts());
+        } catch (SQLException | LiquibaseException ex) {
+           // throw new CommonDaoException("",ex);
+            ex.printStackTrace();
+        }
     }
 
     public static AccountDao getAccountDao(){

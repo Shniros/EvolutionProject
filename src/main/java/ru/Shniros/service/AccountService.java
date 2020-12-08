@@ -4,13 +4,11 @@ import ru.Shniros.DAL.DAO.AccountDao;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
 import ru.Shniros.converter.AccountToAccountDto;
 import ru.Shniros.domain.Account;
-import ru.Shniros.domain.Person;
 import ru.Shniros.service.dto.AccountDto;
 import ru.Shniros.service.exception.CommonServiceException;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
+
 
 
 public class AccountService {
@@ -26,11 +24,11 @@ public class AccountService {
     }
 
     public AccountDto CreateAccount(Account account, Integer personId) throws CommonServiceException {
-        try (Connection connection = dataSource.getConnection()){
+        try{
             if(accountDao.countAccountByPersonId(personId) < MAX_ACCOUNT_AMOUNT){
-                return converter.convert(accountDao.insert(account, connection));
+                return converter.convert(accountDao.insert(account));
             }
-        }catch (CommonDaoException | SQLException ex){
+        }catch (CommonDaoException ex){
             throw new CommonServiceException("Cannot create account",ex);
         }
         return null;

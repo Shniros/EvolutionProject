@@ -31,7 +31,7 @@ public class AccountDao implements iDao<Account, Long> {
 
             ps.setInt(1,personId);
             ResultSet rs = ps.executeQuery();
-            accounts = new ArrayList<Account>();
+            accounts = new ArrayList<>();
             while(rs.next()){
                 accounts.add(new Account().setId(rs.getInt("id"))
                         .setName(rs.getString("balance"))
@@ -51,7 +51,7 @@ public class AccountDao implements iDao<Account, Long> {
              PreparedStatement ps = connection.prepareStatement(query))
         {
             ResultSet rs = ps.executeQuery();
-            accounts = new ArrayList<Account>();
+            accounts = new ArrayList<>();
             while(rs.next()){
                 accounts.add(new Account().setId(rs.getInt("id"))
                         .setName(rs.getString("balance"))
@@ -62,6 +62,43 @@ public class AccountDao implements iDao<Account, Long> {
             throw new CommonDaoException("Cannot find all accounts",ex);
         }
         return accounts;
+    }
+
+    @Override
+    public Account insert(Account account) throws CommonDaoException {
+        final String query = "INSERT INTO " + TABLE_NAME +
+                "(name, balance, person_id)" +
+                " VALUES (?,?,?)";
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query))
+        {
+            ps.setString(1, account.getName());
+            ps.setBigDecimal(2, account.getBalance());
+            ps.setInt(3, account.getPersonId());
+            ps.execute();
+        }catch (SQLException ex){
+            throw new CommonDaoException("Cannot insert account",ex);
+        }
+        return account;
+    }
+
+    @Override
+    public Account update(Account account) throws CommonDaoException {
+        final String query = "UPDATE " + TABLE_NAME +
+                " SET balance = ?" +
+                " WHERE id = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query))
+        {
+            ps.setBigDecimal(1,account.getBalance());
+            ps.setLong(2,account.getId());
+            ps.execute();
+        }catch (SQLException ex){
+            throw new CommonDaoException("Cannot update account",ex);
+        }
+
+        return account;
     }
 
     @Override
@@ -87,36 +124,29 @@ public class AccountDao implements iDao<Account, Long> {
         return account;
     }
 
-    @Override
-    public Account insert(Account account, Connection connection) throws CommonDaoException {
+
+    public Account insert(Account account, Connection connection) throws SQLException {
         final String query = "INSERT INTO " + TABLE_NAME +
                 "(name, balance, person_id)" +
                 " VALUES (?,?,?)";
-        try(PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, account.getName());
-            ps.setBigDecimal(2, account.getBalance());
-            ps.setInt(3, account.getPersonId());
-            ps.execute();
-        }catch (SQLException ex){
-            throw new CommonDaoException("Cannot insert account",ex);
-        }
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setString(1, account.getName());
+        ps.setBigDecimal(2, account.getBalance());
+        ps.setInt(3, account.getPersonId());
+        ps.execute();
         return account;
     }
 
-    @Override
-    public Account update(Account account, Connection connection) throws CommonDaoException {
+    public Account update(Account account, Connection connection) throws SQLException {
         final String query = "UPDATE " + TABLE_NAME +
                 " SET balance = ?" +
                 " WHERE id = ?";
 
-        try (PreparedStatement ps = connection.prepareStatement(query)){
-            ps.setBigDecimal(1,account.getBalance());
-            ps.setLong(2,account.getId());
-            ps.execute();
-        }catch (SQLException ex){
-            throw new CommonDaoException("Cannot update account",ex);
-        }
-        ;
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setBigDecimal(1,account.getBalance());
+        ps.setLong(2,account.getId());
+        ps.execute();
+
         return account;
     }
 
