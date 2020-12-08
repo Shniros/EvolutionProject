@@ -41,6 +41,7 @@ public class DaoFactory {
         try {
             DatabaseConnection connection = new JdbcConnection(dataSource.getConnection());
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(connection);
+            database.setDefaultSchemaName("finance");
             Liquibase liquibase = new Liquibase(
                     "liquibase.xml",
                     new ClassLoaderResourceAccessor(),

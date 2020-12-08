@@ -3,7 +3,6 @@ package ru.Shniros.DAL;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 public interface iDao <DOMAIN, ID> {

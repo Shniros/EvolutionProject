@@ -7,6 +7,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
          http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
 <changeSet id="1" author="jobshniros@gmail.com">
+
     <createTable tableName="person">
         <column name="id" type="SERIAL" autoIncrement="true">
             <constraints unique="true" nullable="false" primaryKey="true"/>
@@ -59,6 +60,7 @@
             <constraints nullable="false"/>
         </column>
     </createTable>
+
     <addForeignKeyConstraint baseTableName="account" baseColumnNames="person_id"
                              constraintName="account_person_id"
                              referencedTableName="person" referencedColumnNames="id"/>
