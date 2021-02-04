@@ -19,7 +19,7 @@ public class PersonDao implements iDao<Person, Integer> {
 
     @Override
     public Person findById(Integer id) throws CommonDaoException {
-        Person person = null;
+        Person person = new Person();
         String query = "SELECT * FROM " + TABLE_NAME +
                 " WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
@@ -28,7 +28,6 @@ public class PersonDao implements iDao<Person, Integer> {
             ps.setInt(1,id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                person = new Person();
                 person.setId(rs.getInt("id"));
                 person.setEmail(rs.getString("email"));
                 person.setPassword(rs.getString("password"));
@@ -43,13 +42,12 @@ public class PersonDao implements iDao<Person, Integer> {
 
     @Override
     public List<Person> findByAll() throws CommonDaoException {
-        List<Person> people = null;
+        List<Person> people = new ArrayList<Person>();
         final String query = "SELECT * FROM " + TABLE_NAME;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(query))
         {
             ResultSet rs = ps.executeQuery();
-            people = new ArrayList<Person>();
             while (rs.next()){
                 people.add(new Person().setId(rs.getInt("id"))
                         .setEmail(rs.getString("email"))

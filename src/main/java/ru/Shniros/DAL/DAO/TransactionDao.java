@@ -43,13 +43,12 @@ public class TransactionDao implements iDao<Transaction,Long> {
 
     @Override
     public List<Transaction> findByAll() throws CommonDaoException {
-        List<Transaction> list = null;
+        List<Transaction> list = new ArrayList<Transaction>();
         final String query = "SELECT * FROM " + TABLE_NAME;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(query))
         {
             ResultSet rs = ps.executeQuery();
-            list = new ArrayList<Transaction>();
             while(rs.next()){
                 list.add(new Transaction().setId(rs.getInt("id"))
                                 .setDate(rs.getDate("date"))

@@ -22,7 +22,7 @@ public class AccountDao implements iDao<Account, Long> {
     }
 
     public List<Account> findAllByPersonId(Integer personId) throws CommonDaoException {
-        List<Account> accounts = null;
+        List<Account> accounts = new ArrayList<>();
         final String query = "SELECT * FROM " + TABLE_NAME +
                 " WHERE person_id = ?";
         try ( Connection connection = dataSource.getConnection();
@@ -31,7 +31,6 @@ public class AccountDao implements iDao<Account, Long> {
 
             ps.setInt(1,personId);
             ResultSet rs = ps.executeQuery();
-            accounts = new ArrayList<>();
             while(rs.next()){
                 accounts.add(new Account().setId(rs.getInt("id"))
                         .setName(rs.getString("balance"))
@@ -45,13 +44,12 @@ public class AccountDao implements iDao<Account, Long> {
     }
     @Override
     public List<Account> findByAll() throws CommonDaoException {
-        List<Account> accounts = null;
+        List<Account> accounts = new ArrayList<>();
         final String query = "SELECT * FROM " + TABLE_NAME;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(query))
         {
             ResultSet rs = ps.executeQuery();
-            accounts = new ArrayList<>();
             while(rs.next()){
                 accounts.add(new Account().setId(rs.getInt("id"))
                         .setName(rs.getString("balance"))

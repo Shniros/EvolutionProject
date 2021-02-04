@@ -41,13 +41,12 @@ public class TransactionCategoryDao implements iDao<TransactionCategory, Integer
 
     @Override
     public List<TransactionCategory> findByAll() throws CommonDaoException {
-        List<TransactionCategory> categories = null;
+        List<TransactionCategory> categories = new ArrayList<>();
         final String query = "SELECT * FROM " + TABLE_NAME;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(query))
         {
             ResultSet rs = ps.executeQuery();
-            categories = new ArrayList<>();
             while (rs.next()){
                 categories.add(new TransactionCategory().setId(rs.getInt("id"))
                         .setName("name"));
