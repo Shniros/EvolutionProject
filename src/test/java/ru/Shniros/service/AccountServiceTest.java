@@ -1,5 +1,6 @@
 package ru.Shniros.service;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
@@ -34,29 +35,30 @@ class AccountServiceTest {
     }
 
     @Test
-    void createAccount_amountAccountMoreMax() throws CommonServiceException {
+    void createAccount_amountAccountMoreMax() throws CommonServiceException, CommonDaoException {
         Account account = new Account();
         account.setPersonId(1);
-        Integer person_id = account.getPersonId();
-        when(accountDao.countAccountByPersonId(person_id)).thenReturn(1);
+        when(accountDao.countAccountByPersonId(account.getPersonId())).thenReturn(5);
 
-        AccountDto testDto = subj.CreateAccount(account,person_id);
+        AccountDto testDto = subj.CreateAccount(account);
         assertNull(testDto);
     }
 
     @Test
-    void createAccount_ok() throws CommonServiceException, SQLException, CommonDaoException {
+    void createAccount_ok() throws CommonServiceException, CommonDaoException {
         Account account = new Account();
         account.setPersonId(1);
+        //account.setName("test");
         account.setId(1);
-        Integer person_id = account.getPersonId();
         AccountDto dto = new AccountDto();
         dto.setId(1);
-        when(accountDao.countAccountByPersonId(person_id)).thenReturn(1);
-        when(accountDao.insert(account, dataSource.getConnection())).thenReturn(account);
+       // dto.setName("test");
+        when(accountDao.countAccountByPersonId(account.getPersonId())).thenReturn(1);
+        when(accountDao.insert(account)).thenReturn(account);
         when(converter.convert(account)).thenReturn(dto);
 
-        AccountDto testDto = subj.CreateAccount(account,person_id);
+        AccountDto testDto = subj.CreateAccount(account);
+
         assertEquals(dto,testDto);
     }
 }

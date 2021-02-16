@@ -153,7 +153,7 @@ public class AccountDao implements iDao<Account, Long> {
         return false;
     }
 
-    public Integer countAccountByPersonId(Integer personId){
+    public Integer countAccountByPersonId(Integer personId) throws CommonDaoException {
         final String query = "SELECT count(*) FROM " + TABLE_NAME +
                 " WHERE person_id = ?";
         try (Connection connection = dataSource.getConnection())
@@ -166,8 +166,8 @@ public class AccountDao implements iDao<Account, Long> {
                 return result;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new CommonDaoException("Cannot count", ex);
         }
-        return null;
+        return Integer.MAX_VALUE;
     }
 }

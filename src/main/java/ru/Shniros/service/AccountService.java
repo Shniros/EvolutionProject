@@ -23,11 +23,11 @@ public class AccountService {
         this.converter = converter;
     }
 
-    public AccountDto CreateAccount(Account account, Integer personId) throws CommonServiceException {
+    public AccountDto CreateAccount(Account account) throws CommonServiceException {
         try{
-            if(accountDao.countAccountByPersonId(personId) < MAX_ACCOUNT_AMOUNT){
+            if(accountDao.countAccountByPersonId(account.getPersonId()) < MAX_ACCOUNT_AMOUNT)
                 return converter.convert(accountDao.insert(account));
-            }
+
         }catch (CommonDaoException ex){
             throw new CommonServiceException("Cannot create account",ex);
         }

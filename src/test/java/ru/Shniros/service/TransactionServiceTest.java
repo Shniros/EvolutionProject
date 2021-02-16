@@ -58,8 +58,8 @@ class TransactionServiceTest {
         subj = ServiceFactory.getTransactionService();
         subj.CreateTransaction(tg.getId(),fromAccount.getId(),toAccount.getId(),BigDecimal.valueOf(20));
 
-        Assert.assertEquals(DaoFactory.getAccountDao().findById(fromAccount.getId()).getBalance(),BigDecimal.valueOf(80.0));
-        Assert.assertEquals(DaoFactory.getAccountDao().findById(toAccount.getId()).getBalance(),BigDecimal.valueOf(20.0));
+        Assert.assertEquals(DaoFactory.getAccountDao().findById(fromAccount.getId()).getBalance(),BigDecimal.valueOf(80));
+        Assert.assertEquals(DaoFactory.getAccountDao().findById(toAccount.getId()).getBalance(),BigDecimal.valueOf(20));
     }
     /*@Test
     void createTransaction_notFoundFromAccount() throws CommonDaoException{

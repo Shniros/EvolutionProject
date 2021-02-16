@@ -49,7 +49,7 @@ public class TransactionCategoryDao implements iDao<TransactionCategory, Integer
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 categories.add(new TransactionCategory().setId(rs.getInt("id"))
-                        .setName("name"));
+                        .setName("type_category"));
             }
         } catch (SQLException ex) {
             throw new CommonDaoException("Cannot find all categories",ex);
@@ -60,7 +60,7 @@ public class TransactionCategoryDao implements iDao<TransactionCategory, Integer
     @Override
     public TransactionCategory insert(TransactionCategory category) throws CommonDaoException {
         final String query = "INSERT INTO " + TABLE_NAME +
-                " (name)" +
+                " (type_category)" +
                 " VALUES (?)";
         try(Connection connection = dataSource.getConnection();
             PreparedStatement ps = connection.prepareStatement(query))
@@ -76,7 +76,7 @@ public class TransactionCategoryDao implements iDao<TransactionCategory, Integer
     @Override
     public TransactionCategory update(TransactionCategory category) throws CommonDaoException {
         final String query = "UPDATE " + TABLE_NAME +
-                " SET name = ?" +
+                " SET type_category = ?" +
                 " WHERE = ?";
         try(Connection connection = dataSource.getConnection();
             PreparedStatement ps = connection.prepareStatement(query))
