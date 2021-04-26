@@ -25,7 +25,7 @@ public class DaoFactory {
     public static DataSource getDataSource(){
         final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
         final String username = "postgres";
-        final String password = "12345";
+        final String password = "qwe1";
         if(dataSource == null){
             HikariDataSource ds = new HikariDataSource();
             ds.setJdbcUrl(System.getProperty("jdbcURL",DB_URL));
