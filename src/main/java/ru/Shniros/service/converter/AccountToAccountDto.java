@@ -1,8 +1,8 @@
-package ru.Shniros.converter;
+package ru.Shniros.service.converter;
 
 import org.springframework.core.convert.converter.Converter;
 import ru.Shniros.domain.Account;
-import ru.Shniros.service.dto.AccountDto;
+import ru.Shniros.web.dto.AccountDto;
 
 public class AccountToAccountDto implements Converter<Account, AccountDto> {
     @Override

@@ -6,7 +6,7 @@ import ru.Shniros.DAL.DAO.AccountDao;
 import ru.Shniros.DAL.DAO.DaoFactory;
 import ru.Shniros.DAL.DAO.TransactionDao;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
-import ru.Shniros.converter.TransactionToTransactionDto;
+import ru.Shniros.service.converter.TransactionToTransactionDto;
 import ru.Shniros.domain.Account;
 import ru.Shniros.domain.Person;
 import ru.Shniros.domain.TransactionCategory;
@@ -53,6 +53,7 @@ class TransactionServiceTest {
         DaoFactory.getAccountDao().insert(fromAccount);
         DaoFactory.getAccountDao().insert(toAccount);
     }
+    //TODO fix text
     @Test
     void createTransaction_ok() throws CommonServiceException, CommonDaoException {
         subj = ServiceFactory.getTransactionService();

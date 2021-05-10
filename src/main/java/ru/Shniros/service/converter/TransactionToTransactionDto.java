@@ -1,8 +1,8 @@
-package ru.Shniros.converter;
+package ru.Shniros.service.converter;
 
 import org.springframework.core.convert.converter.Converter;
 import ru.Shniros.domain.Transaction;
-import ru.Shniros.service.dto.TransactionDto;
+import ru.Shniros.web.dto.TransactionDto;
 
 public class TransactionToTransactionDto implements Converter<Transaction, TransactionDto> {
     @Override

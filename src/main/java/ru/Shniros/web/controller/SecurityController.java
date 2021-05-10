@@ -1,8 +1,6 @@
 package ru.Shniros.web.controller;
 
-import ru.Shniros.service.SecurityService;
 import ru.Shniros.service.ServiceFactory;
-import ru.Shniros.service.dto.PersonDto;
 import ru.Shniros.service.exception.CommonServiceException;
 
 import javax.ws.rs.GET;
@@ -15,7 +13,7 @@ public class SecurityController {
     @GET
     public String loginPerson(@PathParam("email")String email, @PathParam("password")String password)
             throws CommonServiceException {
-       // ServiceFactory.getSecurityService().login(email,password);
+        ServiceFactory.getSecurityService().login(email,password);
         return email + "/" + ServiceFactory.getDigestService().getMd5("12345");
     }
    /* @GET

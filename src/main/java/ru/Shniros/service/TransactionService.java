@@ -4,7 +4,6 @@ import ru.Shniros.DAL.ConnectionService;
 import ru.Shniros.DAL.DAO.AccountDao;
 import ru.Shniros.DAL.DAO.TransactionDao;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
-import ru.Shniros.converter.TransactionToTransactionDto;
 import ru.Shniros.domain.Account;
 import ru.Shniros.domain.Transaction;
 import ru.Shniros.service.exception.CommonServiceException;
@@ -19,13 +18,13 @@ public class TransactionService {
     private final AccountDao accountDao;
     private final TransactionDao transactionDao;
     private final DataSource dataSource;
-    private final TransactionToTransactionDto converter;
 
-    public TransactionService(AccountDao accountDao, TransactionDao transactionDao, DataSource dataSource, TransactionToTransactionDto converter) {
+    public TransactionService(AccountDao accountDao,
+                              TransactionDao transactionDao,
+                              DataSource dataSource) {
         this.accountDao = accountDao;
         this.transactionDao = transactionDao;
         this.dataSource = dataSource;
-        this.converter = converter;
     }
 
     public void CreateTransaction(int categoryId, long fromAccountId, long toAccountId, BigDecimal sum) throws CommonServiceException {

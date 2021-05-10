@@ -1,4 +1,4 @@
-package ru.Shniros.service.dto;
+package ru.Shniros.web.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

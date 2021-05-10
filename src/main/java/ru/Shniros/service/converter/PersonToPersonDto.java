@@ -1,8 +1,8 @@
-package ru.Shniros.converter;
+package ru.Shniros.service.converter;
 
 import org.springframework.core.convert.converter.Converter;
 import ru.Shniros.domain.Person;
-import ru.Shniros.service.dto.PersonDto;
+import ru.Shniros.web.dto.PersonDto;
 
 public class PersonToPersonDto implements Converter<Person, PersonDto> {
 

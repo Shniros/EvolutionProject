@@ -1,14 +1,7 @@
 package ru.Shniros.service;
 
-import org.springframework.util.DigestUtils;
 import ru.Shniros.DAL.DAO.DaoFactory;
-import ru.Shniros.converter.AccountToAccountDto;
-import ru.Shniros.converter.PersonToPersonDto;
-import ru.Shniros.converter.TransactionToTransactionDto;
 import ru.Shniros.service.exception.CommonServiceException;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class ServiceFactory {
     private static AccountService accountService;
@@ -20,25 +13,20 @@ public class ServiceFactory {
         if(transactionService == null){
             transactionService = new TransactionService(DaoFactory.getAccountDao(),
                     DaoFactory.getTransactionDao(),
-                    DaoFactory.getDataSource(),
-                    new TransactionToTransactionDto());
+                    DaoFactory.getDataSource());
         }
         return transactionService;
     }
     public static AccountService getAccountService(){
         if(accountService == null){
-            accountService = new AccountService(DaoFactory.getAccountDao(),
-                    DaoFactory.getDataSource(),
-                    new AccountToAccountDto());
+            accountService = new AccountService(DaoFactory.getAccountDao());
         }
         return accountService;
     }
     public static SecurityService getSecurityService() throws CommonServiceException {
         if(securityService == null){
             securityService = new SecurityService(DaoFactory.getPersonDao(),
-                    getDigestService(),
-                    DaoFactory.getDataSource(),
-                    new PersonToPersonDto());
+                    getDigestService());
         }
         return securityService;
     }
