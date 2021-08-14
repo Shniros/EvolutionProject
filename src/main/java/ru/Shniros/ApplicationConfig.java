@@ -1,4 +1,4 @@
-package ru.Shniros.web;
+package ru.Shniros;
 
 
 import ru.Shniros.web.controller.SecurityController;

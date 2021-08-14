@@ -2,9 +2,14 @@ package ru.Shniros.service;
 
 import org.springframework.util.DigestUtils;
 
-public class DigestService extends DigestUtils {
+import javax.enterprise.context.RequestScoped;
 
-    public String getMd5(String password){
+@RequestScoped
+public class DigestService extends DigestUtils {
+    public DigestService() {
+    }
+
+    public String getMd5(String password) {
         return md5DigestAsHex(password.getBytes());
     }
 }

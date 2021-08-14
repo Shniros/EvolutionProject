@@ -2,16 +2,21 @@ package ru.Shniros.service;
 
 import ru.Shniros.DAL.DAO.PersonDao;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
-import ru.Shniros.service.converter.PersonToPersonDto;
 import ru.Shniros.domain.Person;
 import ru.Shniros.service.exception.CommonServiceException;
 
-import javax.sql.DataSource;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 
+@RequestScoped
 public class SecurityService {
-    private final PersonDao personDao;
-    private final  DigestService digestService;
+    private PersonDao personDao;
+    private DigestService digestService;
 
+    public SecurityService() {
+    }
+
+    @Inject
     public SecurityService(PersonDao personDao,
                            DigestService digestService) {
         this.personDao = personDao;
@@ -26,19 +31,19 @@ public class SecurityService {
                     return curPerson;
                 }
             }
-        }catch (CommonDaoException daoEx){
-            throw new CommonServiceException("Cannot login person",daoEx);
+        } catch (CommonDaoException daoEx) {
+            throw new CommonServiceException("Cannot login person", daoEx);
         }
         return null;
     }
 
     public Person registration(Person person) throws CommonServiceException {
-        try{
-            if(personDao.findByEmail(person.getEmail()) == null){
+        try {
+            if (personDao.findByEmail(person.getEmail()) == null) {
                 return personDao.insert(person);
             }
         } catch (CommonDaoException ex) {
-            throw new CommonServiceException("Cannot registration person",ex);
+            throw new CommonServiceException("Cannot registration person", ex);
         }
         return null;
     }

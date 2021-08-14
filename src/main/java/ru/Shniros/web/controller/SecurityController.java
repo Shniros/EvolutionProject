@@ -1,25 +1,32 @@
 package ru.Shniros.web.controller;
 
-import ru.Shniros.service.ServiceFactory;
+import ru.Shniros.mappers.PersonMapper;
+import ru.Shniros.service.SecurityService;
 import ru.Shniros.service.exception.CommonServiceException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
 @Path("/auth")
 public class SecurityController {
-    @Path("/login/{email}/{password}")
+    @Inject
+    SecurityService securityService;
+    @Inject
+    PersonMapper personMapper;
+
     @GET
-    public String loginPerson(@PathParam("email")String email, @PathParam("password")String password)
-            throws CommonServiceException {
-        ServiceFactory.getSecurityService().login(email,password);
-        return email + "/" + ServiceFactory.getDigestService().getMd5("12345");
+    @Path("/login")
+    @Produces({"application/json"})
+    public Response loginPerson(@Context HttpServletRequest paramHttpServletRequest,
+                                @HeaderParam("email") String email,
+                                @HeaderParam("password") String password) {
+        try {
+            return Response.ok(personMapper.toPersonDto(securityService.login(email, password))).build();
+        } catch (CommonServiceException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
     }
-   /* @GET
-    @Path("/{pass}")
-    public String get(@PathParam("pass")String pass) {
-        return pass;
-        //return ServiceFactory.getDigestService().getMd5("12345");
-    }*/
 }

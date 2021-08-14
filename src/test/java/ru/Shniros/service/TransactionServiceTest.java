@@ -6,7 +6,6 @@ import ru.Shniros.DAL.DAO.AccountDao;
 import ru.Shniros.DAL.DAO.DaoFactory;
 import ru.Shniros.DAL.DAO.TransactionDao;
 import ru.Shniros.DAL.DAO.exception.CommonDaoException;
-import ru.Shniros.service.converter.TransactionToTransactionDto;
 import ru.Shniros.domain.Account;
 import ru.Shniros.domain.Person;
 import ru.Shniros.domain.TransactionCategory;
